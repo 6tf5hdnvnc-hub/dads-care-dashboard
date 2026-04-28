@@ -137,6 +137,47 @@
   .divider{height:1px;background:var(--border);margin:18px 0;}
   .provider-label{font-size:0.82rem;font-weight:700;color:var(--bark);text-transform:uppercase;letter-spacing:0.05em;margin:18px 0 8px;}
   .provider-label:first-child{margin-top:0;}
+
+  /* Collapsible sub-sections */
+  .subsection{background:var(--cream);border:1px solid var(--border);border-radius:10px;margin:10px 0;}
+  .subsection-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;user-select:none;border-radius:10px;transition:background 0.15s;}
+  .subsection-header:hover{background:var(--sage-pale);}
+  .subsection.open .subsection-header{border-radius:10px 10px 0 0;border-bottom:1px solid var(--border);}
+  .subsection-title{font-size:0.82rem;font-weight:700;color:var(--bark);text-transform:uppercase;letter-spacing:0.05em;}
+  .subsection-toggle{font-size:0.75rem;color:var(--slate-light);transition:transform 0.2s;}
+  .subsection.open .subsection-toggle{transform:rotate(180deg);}
+  .subsection-body{display:none;padding:12px 14px 14px;}
+  .subsection.open .subsection-body{display:block;}
+
+  /* Expandable notes */
+  .notes-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin-top:16px;padding:8px 10px;background:var(--cream);border:1px solid var(--border);border-radius:8px;transition:background 0.15s;}
+  .notes-toggle:hover{background:var(--sage-pale);}
+  .notes-toggle.open{border-radius:8px 8px 0 0;border-bottom-color:transparent;}
+  .notes-toggle-label{font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--slate-light);}
+  .notes-save{font-size:0.75rem;color:var(--sage);opacity:0;transition:opacity 0.3s;margin-left:8px;}
+  .notes-save.show{opacity:1;}
+  .notes-toggle-right{display:flex;align-items:center;gap:6px;}
+  .notes-toggle-icon{font-size:0.75rem;color:var(--slate-light);transition:transform 0.2s;}
+  .notes-toggle.open .notes-toggle-icon{transform:rotate(180deg);}
+  .notes-collapse{display:none;}
+  .notes-collapse.open{display:block;}
+  .notes-collapse .notes-area{border-radius:0 0 8px 8px;margin-top:0;}
+
+  /* Master To-Do */
+  .master-todo-list{list-style:none;margin-bottom:8px;}
+  .master-todo-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.88rem;}
+  .master-todo-item:last-child{border-bottom:none;}
+  .master-todo-source{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--slate-light);white-space:nowrap;margin-top:3px;min-width:80px;}
+  .master-todo-text{flex:1;line-height:1.5;}
+  .master-todo-text.done{text-decoration:line-through;color:#aaa;}
+  .master-empty{font-size:0.85rem;color:#bbb;padding:8px 0;}
+  .completed-toggle{display:flex;align-items:center;gap:6px;cursor:pointer;font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--slate-light);padding:8px 0;user-select:none;}
+  .completed-toggle:hover{color:var(--bark);}
+  .completed-body{display:none;}
+  .completed-body.open{display:block;}
+  .master-add-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
+  .master-section-select{background:var(--cream);border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;color:var(--slate);outline:none;transition:border-color 0.2s;}
+  .master-section-select:focus{border-color:var(--sage);}
   @media(max-width:640px){
     .header{padding:24px 16px 20px;}.header h1{font-size:1.4rem;}
     .container{padding:20px 12px 40px;}
@@ -226,6 +267,41 @@
     </div>
   </div>
 
+
+  <div class="section open" id="sec-master">
+    <div class="section-header" onclick="toggle('sec-master')">
+      <div class="section-title-row"><div class="section-icon icon-teal">&#9989;</div>
+        <div><div class="section-title">Master To-Do List</div><div class="section-subtitle">All action items across every section</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-rose" id="master-badge">0 Open</span><span class="toggle-icon">&#9660;</span></div>
+    </div>
+    <div class="section-body">
+      <ul class="master-todo-list" id="master-todo-list"></ul>
+      <div class="completed-toggle" onclick="toggleCompletedMaster()">
+        <span id="completed-toggle-icon">&#9660;</span>
+        <span id="completed-toggle-label">Show Completed</span>
+      </div>
+      <div class="completed-body" id="completed-body">
+        <ul class="master-todo-list" id="master-completed-list"></ul>
+      </div>
+      <div class="master-add-row">
+        <select class="master-section-select" id="master-section-select">
+          <option value="social">Social Worker</option>
+          <option value="snap">SNAP / EBT</option>
+          <option value="medicaid">Medicaid</option>
+          <option value="medical">Medical</option>
+          <option value="therapy">Therapy</option>
+          <option value="authority">Care Authority</option>
+          <option value="housing">Housing</option>
+          <option value="financial">Financial</option>
+          <option value="emergency">Emergency</option>
+        </select>
+        <input class="add-action-input" id="master-input" placeholder="Add a to-do..." style="flex:1" onkeydown="if(event.key==='Enter') addMasterAction()">
+        <button class="add-btn" onclick="addMasterAction()">+ Add</button>
+      </div>
+    </div>
+  </div>
+
   <div class="section open" id="sec-social">
     <div class="section-header" onclick="toggle('sec-social')">
       <div class="section-title-row"><div class="section-icon icon-sage">&#129309;</div>
@@ -239,16 +315,35 @@
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17042087622">+1 (704) 208-7622</a></div>
         <div class="contact-label">Email</div><div class="contact-row">&#9993;&#65039; <a href="mailto:Yaisha.Robinson@mecklenburgcountync.gov">Yaisha.Robinson@mecklenburgcountync.gov</a></div>
       </div></div>
-      <div id="log-widget-social"></div>
-      <div class="notes-label">Notes <span class="save-indicator" id="save-social">&#10003; Saved</span></div>
-      <textarea class="notes-area" id="notes-social" placeholder="Latest conversations, what was discussed, next steps..." oninput="saveNote('social')" rows="3"></textarea>
-      <div class="notes-label">Documents</div><div id="docs-social"></div>
-      <div class="notes-label">Action Items</div>
-      <ul class="action-list" id="actions-social"></ul>
-      <div class="add-action-row">
-        <input class="add-action-input" id="input-social" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('social')">
-        <button class="add-btn" onclick="addAction('social')">+ Add</button>
+      <div class="subsection" id="subsec-log-social">
+      <div class="subsection-header" onclick="toggleSub('log-social')">
+        <span class="subsection-title">&#128203; Contact Log</span>
+        <span class="subsection-toggle">&#9660;</span>
       </div>
+      <div class="subsection-body">
+        <div id="log-widget-social"></div>
+      </div></div>
+      <div class="notes-toggle" id="notes-toggle-social" onclick="toggleNotes('social')">
+        <span class="notes-toggle-label">Notes</span>
+        <div class="notes-toggle-right"><span class="notes-save" id="save-social">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+      </div>
+      <div class="notes-collapse" id="notes-collapse-social">
+        <textarea class="notes-area" id="notes-social" placeholder="Latest conversations, what was discussed, next steps..." oninput="saveNote('social')" rows="3"></textarea>
+      </div>
+      <div class="notes-toggle" id="notes-toggle-snap" onclick="toggleNotes('snap')">
+        <span class="notes-toggle-label">Documents</div><div id="docs-social"></div>
+      <div class="subsection" id="subsec-actions-social">
+      <div class="subsection-header" onclick="toggleSub('actions-social')">
+        <span class="subsection-title">&#9989; Action Items</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
+        <ul class="action-list" id="actions-social"></ul>
+        <div class="add-action-row">
+          <input class="add-action-input" id="input-social" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('social')">
+          <button class="add-btn" onclick="addAction('social')">+ Add</button>
+        </div>
+      </div></div>
     </div>
   </div>
 
@@ -265,16 +360,34 @@
         <div class="contact-name">SNAP / EBT State Hotline</div>
         <div class="contact-label">Phone (card issues)</div><div class="contact-row">&#128222; <a href="tel:8886227328">888-622-7328</a></div>
       </div></div>
-      <div id="log-widget-snap"></div>
-      <div class="notes-label">Notes <span class="save-indicator" id="save-snap">&#10003; Saved</span></div>
-      <textarea class="notes-area" id="notes-snap" placeholder="Date card was expected, mailing address, reference numbers..." oninput="saveNote('snap')" rows="3"></textarea>
-      <div class="notes-label">Documents</div><div id="docs-snap"></div>
-      <div class="notes-label">Action Items</div>
-      <ul class="action-list" id="actions-snap"></ul>
-      <div class="add-action-row">
-        <input class="add-action-input" id="input-snap" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('snap')">
-        <button class="add-btn" onclick="addAction('snap')">+ Add</button>
+      <div class="subsection" id="subsec-log-snap">
+      <div class="subsection-header" onclick="toggleSub('log-snap')">
+        <span class="subsection-title">&#128203; Contact Log</span>
+        <span class="subsection-toggle">&#9660;</span>
       </div>
+      <div class="subsection-body">
+        <div id="log-widget-snap"></div>
+      </div></div>
+      <div class="notes-label">Notes</span>
+        <div class="notes-toggle-right"><span class="notes-save" id="save-snap">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+      </div>
+      <div class="notes-collapse" id="notes-collapse-snap">
+        <textarea class="notes-area" id="notes-snap" placeholder="Date card was expected, mailing address, reference numbers..." oninput="saveNote('snap')" rows="3"></textarea>
+      </div>
+      <div class="notes-toggle" id="notes-toggle-medicaid" onclick="toggleNotes('medicaid')">
+        <span class="notes-toggle-label">Documents</div><div id="docs-snap"></div>
+      <div class="subsection" id="subsec-actions-snap">
+      <div class="subsection-header" onclick="toggleSub('actions-snap')">
+        <span class="subsection-title">&#9989; Action Items</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
+        <ul class="action-list" id="actions-snap"></ul>
+        <div class="add-action-row">
+          <input class="add-action-input" id="input-snap" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('snap')">
+          <button class="add-btn" onclick="addAction('snap')">+ Add</button>
+        </div>
+      </div></div>
     </div>
   </div>
 
@@ -292,16 +405,34 @@
         <div class="contact-label">Email</div><div class="contact-row">&#9993;&#65039; <a href="mailto:charles.newson@mecklenburgcountync.gov">charles.newson@mecklenburgcountync.gov</a></div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9803146437">980-314-6437</a></div>
       </div></div>
-      <div id="log-widget-medicaid"></div>
-      <div class="notes-label">Notes <span class="save-indicator" id="save-medicaid">&#10003; Saved</span></div>
-      <textarea class="notes-area" id="notes-medicaid" placeholder="What aspects were denied? What info did they request? Deadlines..." oninput="saveNote('medicaid')" rows="3"></textarea>
-      <div class="notes-label">Documents</div><div id="docs-medicaid"></div>
-      <div class="notes-label">Action Items</div>
-      <ul class="action-list" id="actions-medicaid"></ul>
-      <div class="add-action-row">
-        <input class="add-action-input" id="input-medicaid" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('medicaid')">
-        <button class="add-btn" onclick="addAction('medicaid')">+ Add</button>
+      <div class="subsection" id="subsec-log-medicaid">
+      <div class="subsection-header" onclick="toggleSub('log-medicaid')">
+        <span class="subsection-title">&#128203; Contact Log</span>
+        <span class="subsection-toggle">&#9660;</span>
       </div>
+      <div class="subsection-body">
+        <div id="log-widget-medicaid"></div>
+      </div></div>
+      <div class="notes-label">Notes</span>
+        <div class="notes-toggle-right"><span class="notes-save" id="save-medicaid">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+      </div>
+      <div class="notes-collapse" id="notes-collapse-medicaid">
+        <textarea class="notes-area" id="notes-medicaid" placeholder="What aspects were denied? What info did they request? Deadlines..." oninput="saveNote('medicaid')" rows="3"></textarea>
+      </div>
+      <div class="notes-toggle" id="notes-toggle-medical" onclick="toggleNotes('medical')">
+        <span class="notes-toggle-label">Documents</div><div id="docs-medicaid"></div>
+      <div class="subsection" id="subsec-actions-medicaid">
+      <div class="subsection-header" onclick="toggleSub('actions-medicaid')">
+        <span class="subsection-title">&#9989; Action Items</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
+        <ul class="action-list" id="actions-medicaid"></ul>
+        <div class="add-action-row">
+          <input class="add-action-input" id="input-medicaid" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('medicaid')">
+          <button class="add-btn" onclick="addAction('medicaid')">+ Add</button>
+        </div>
+      </div></div>
     </div>
   </div>
 
@@ -330,16 +461,67 @@
           <div class="contact-row" style="color:var(--rose);font-weight:600;">&#128197; April 28, 2026 — 11:00 AM</div>
         </div>
       </div>
-      <div id="log-widget-medical"></div>
-      <div class="notes-label">Notes <span class="save-indicator" id="save-medical">&#10003; Saved</span></div>
-      <textarea class="notes-area" id="notes-medical" placeholder="Primary doctor, medications, allergies, insurance cards, other specialists..." oninput="saveNote('medical')" rows="4"></textarea>
-      <div class="notes-label">Documents</div><div id="docs-medical"></div>
-      <div class="notes-label">Action Items</div>
-      <ul class="action-list" id="actions-medical"></ul>
-      <div class="add-action-row">
-        <input class="add-action-input" id="input-medical" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('medical')">
-        <button class="add-btn" onclick="addAction('medical')">+ Add</button>
+      <div class="divider"></div>
+
+      <div class="provider-label">Primary Care</div>
+      <div class="contacts-grid">
+        <div class="contact-card">
+          <div class="contact-name">Lawrence Moffat, MD</div>
+          <div class="contact-label">Practice</div><div class="contact-row">&#127968; Mecklenburg Medical Group</div>
+          <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7043555100">704-355-5100</a></div>
+        </div>
       </div>
+
+      <div class="divider"></div>
+
+      <div class="provider-label">Possible New Primary Care</div>
+      <div class="contacts-grid">
+        <div class="contact-card">
+          <div class="contact-name">Carolina Family Healthcare</div>
+          <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7048474000">704-847-4000</a></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="provider-label">Possible Sleep Doctor</div>
+      <div class="contacts-grid">
+        <div class="contact-card">
+          <div class="contact-name">Ballantyne Sleep Diagnostic</div>
+          <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7049435075">704-943-5075</a></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="subsection" id="subsec-log-medical">
+      <div class="subsection-header" onclick="toggleSub('log-medical')">
+        <span class="subsection-title">&#128203; Contact Log</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
+        <div id="log-widget-medical"></div>
+      </div></div>
+      <div class="notes-label">Notes</span>
+        <div class="notes-toggle-right"><span class="notes-save" id="save-medical">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+      </div>
+      <div class="notes-collapse" id="notes-collapse-medical">
+        <textarea class="notes-area" id="notes-medical" placeholder="Primary doctor, medications, allergies, insurance cards, other specialists..." oninput="saveNote('medical')" rows="4"></textarea>
+      </div>
+      <div class="notes-toggle" id="notes-toggle-therapy" onclick="toggleNotes('therapy')">
+        <span class="notes-toggle-label">Documents</div><div id="docs-medical"></div>
+      <div class="subsection" id="subsec-actions-medical">
+      <div class="subsection-header" onclick="toggleSub('actions-medical')">
+        <span class="subsection-title">&#9989; Action Items</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
+        <ul class="action-list" id="actions-medical"></ul>
+        <div class="add-action-row">
+          <input class="add-action-input" id="input-medical" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('medical')">
+          <button class="add-btn" onclick="addAction('medical')">+ Add</button>
+        </div>
+      </div></div>
     </div>
   </div>
 
@@ -351,15 +533,26 @@
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">In Progress</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="provider-label">Primary Care Solutions</div>
+      <div class="subsection" id="subsec-pcs">
+      <div class="subsection-header" onclick="toggleSub('pcs')">
+        <span class="subsection-title">Primary Care Solutions</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
       <div class="contacts-grid"><div class="contact-card">
         <div class="contact-name">Primary Care Solutions</div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045371022">+1 (704) 537-1022</a></div>
         <div class="contact-label">Needs from us</div><div class="contact-row">&#128203; Name, DOB &amp; Medicare #</div>
       </div></div>
       <div id="log-widget-pcs"></div>
+      </div></div>
       <div class="divider"></div>
-      <div class="provider-label">Monarch</div>
+      <div class="subsection" id="subsec-monarch">
+      <div class="subsection-header" onclick="toggleSub('monarch')">
+        <span class="subsection-title">Monarch</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
       <div class="contacts-grid"><div class="contact-card">
         <div class="contact-name">Monarch</div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8662727826">866-272-7826</a></div>
@@ -370,39 +563,69 @@
         <div class="contact-row" style="color:var(--rose);">&#9888;&#65039; CST currently at capacity</div>
       </div></div>
       <div id="log-widget-monarch"></div>
+      </div></div>
       <div class="divider"></div>
-      <div class="provider-label">Genesis Project 1, Inc.</div>
+      <div class="subsection" id="subsec-genesis">
+      <div class="subsection-header" onclick="toggleSub('genesis')">
+        <span class="subsection-title">Genesis Project 1, Inc.</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
       <div class="contacts-grid"><div class="contact-card">
         <div class="contact-name">Genesis Project 1, Inc.</div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045960505">+1 (704) 596-0505</a></div>
       </div></div>
       <div id="log-widget-genesis"></div>
+      </div></div>
       <div class="divider"></div>
-      <div class="provider-label">Carolina Outreach</div>
+      <div class="subsection" id="subsec-carolina">
+      <div class="subsection-header" onclick="toggleSub('carolina')">
+        <span class="subsection-title">Carolina Outreach</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
       <div class="contacts-grid"><div class="contact-card">
         <div class="contact-name">Carolina Outreach</div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8448661166">844-866-1166</a></div>
         <div class="contact-label">Insurance</div><div class="contact-row">&#9989; Accepts Medicare</div>
       </div></div>
       <div id="log-widget-carolina"></div>
+      </div></div>
       <div class="divider"></div>
-      <div class="provider-label">RHA</div>
+      <div class="subsection" id="subsec-rha">
+      <div class="subsection-header" onclick="toggleSub('rha')">
+        <span class="subsection-title">RHA</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
       <div class="contacts-grid"><div class="contact-card">
         <div class="contact-name">RHA</div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9195189293">919-518-9293</a></div>
         <div class="contact-label">Insurance</div><div class="contact-row">&#9989; Accepts Medicare</div>
       </div></div>
       <div id="log-widget-rha"></div>
+      </div></div>
       <div class="divider"></div>
-      <div class="notes-label">Overall Notes <span class="save-indicator" id="save-therapy">&#10003; Saved</span></div>
-      <textarea class="notes-area" id="notes-therapy" placeholder="Overall notes on therapy search, preferences, what Dad is open to..." oninput="saveNote('therapy')" rows="3"></textarea>
-      <div class="notes-label">Documents</div><div id="docs-therapy"></div>
-      <div class="notes-label">Action Items</div>
-      <ul class="action-list" id="actions-therapy"></ul>
-      <div class="add-action-row">
-        <input class="add-action-input" id="input-therapy" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('therapy')">
-        <button class="add-btn" onclick="addAction('therapy')">+ Add</button>
+      <div class="notes-label">Overall Notes</span>
+        <div class="notes-toggle-right"><span class="notes-save" id="save-therapy">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
       </div>
+      <div class="notes-collapse" id="notes-collapse-therapy">
+        <textarea class="notes-area" id="notes-therapy" placeholder="Overall notes on therapy search, preferences, what Dad is open to..." oninput="saveNote('therapy')" rows="3"></textarea>
+      </div>
+      <div class="notes-toggle" id="notes-toggle-authority" onclick="toggleNotes('authority')">
+        <span class="notes-toggle-label">Documents</div><div id="docs-therapy"></div>
+      <div class="subsection" id="subsec-actions-therapy">
+      <div class="subsection-header" onclick="toggleSub('actions-therapy')">
+        <span class="subsection-title">&#9989; Action Items</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
+        <ul class="action-list" id="actions-therapy"></ul>
+        <div class="add-action-row">
+          <input class="add-action-input" id="input-therapy" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('therapy')">
+          <button class="add-btn" onclick="addAction('therapy')">+ Add</button>
+        </div>
+      </div></div>
     </div>
   </div>
 
@@ -418,16 +641,34 @@
       <div class="status-block amber"><strong>Status:</strong> Form in hand. Requires either an updated ID (ordered) or a credible witness for the notary before it can be executed.</div>
       <div class="provider-label">Financial / Durable POA</div>
       <div class="status-block amber"><strong>Status:</strong> Will need to go through an attorney.</div>
-      <div id="log-widget-authority"></div>
-      <div class="notes-label">Notes <span class="save-indicator" id="save-authority">&#10003; Saved</span></div>
-      <textarea class="notes-area" id="notes-authority" placeholder="Attorney contacts, notary info, witness details, document locations..." oninput="saveNote('authority')" rows="3"></textarea>
-      <div class="notes-label">Documents</div><div id="docs-authority"></div>
-      <div class="notes-label">Action Items</div>
-      <ul class="action-list" id="actions-authority"></ul>
-      <div class="add-action-row">
-        <input class="add-action-input" id="input-authority" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('authority')">
-        <button class="add-btn" onclick="addAction('authority')">+ Add</button>
+      <div class="subsection" id="subsec-log-authority">
+      <div class="subsection-header" onclick="toggleSub('log-authority')">
+        <span class="subsection-title">&#128203; Log</span>
+        <span class="subsection-toggle">&#9660;</span>
       </div>
+      <div class="subsection-body">
+        <div id="log-widget-authority"></div>
+      </div></div>
+      <div class="notes-label">Notes</span>
+        <div class="notes-toggle-right"><span class="notes-save" id="save-authority">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+      </div>
+      <div class="notes-collapse" id="notes-collapse-authority">
+        <textarea class="notes-area" id="notes-authority" placeholder="Attorney contacts, notary info, witness details, document locations..." oninput="saveNote('authority')" rows="3"></textarea>
+      </div>
+      <div class="notes-toggle" id="notes-toggle-housing" onclick="toggleNotes('housing')">
+        <span class="notes-toggle-label">Documents</div><div id="docs-authority"></div>
+      <div class="subsection" id="subsec-actions-authority">
+      <div class="subsection-header" onclick="toggleSub('actions-authority')">
+        <span class="subsection-title">&#9989; Action Items</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
+        <ul class="action-list" id="actions-authority"></ul>
+        <div class="add-action-row">
+          <input class="add-action-input" id="input-authority" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('authority')">
+          <button class="add-btn" onclick="addAction('authority')">+ Add</button>
+        </div>
+      </div></div>
     </div>
   </div>
 
@@ -439,16 +680,34 @@
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div id="log-widget-housing"></div>
-      <div class="notes-label">Notes <span class="save-indicator" id="save-housing">&#10003; Saved</span></div>
-      <textarea class="notes-area" id="notes-housing" placeholder="Living situation, home care aides, transportation needs, utility assistance..." oninput="saveNote('housing')" rows="4"></textarea>
-      <div class="notes-label">Documents</div><div id="docs-housing"></div>
-      <div class="notes-label">Action Items</div>
-      <ul class="action-list" id="actions-housing"></ul>
-      <div class="add-action-row">
-        <input class="add-action-input" id="input-housing" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('housing')">
-        <button class="add-btn" onclick="addAction('housing')">+ Add</button>
+      <div class="subsection" id="subsec-log-housing">
+      <div class="subsection-header" onclick="toggleSub('log-housing')">
+        <span class="subsection-title">&#128203; Log</span>
+        <span class="subsection-toggle">&#9660;</span>
       </div>
+      <div class="subsection-body">
+        <div id="log-widget-housing"></div>
+      </div></div>
+      <div class="notes-label">Notes</span>
+        <div class="notes-toggle-right"><span class="notes-save" id="save-housing">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+      </div>
+      <div class="notes-collapse" id="notes-collapse-housing">
+        <textarea class="notes-area" id="notes-housing" placeholder="Living situation, home care aides, transportation needs, utility assistance..." oninput="saveNote('housing')" rows="4"></textarea>
+      </div>
+      <div class="notes-toggle" id="notes-toggle-financial" onclick="toggleNotes('financial')">
+        <span class="notes-toggle-label">Documents</div><div id="docs-housing"></div>
+      <div class="subsection" id="subsec-actions-housing">
+      <div class="subsection-header" onclick="toggleSub('actions-housing')">
+        <span class="subsection-title">&#9989; Action Items</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
+        <ul class="action-list" id="actions-housing"></ul>
+        <div class="add-action-row">
+          <input class="add-action-input" id="input-housing" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('housing')">
+          <button class="add-btn" onclick="addAction('housing')">+ Add</button>
+        </div>
+      </div></div>
     </div>
   </div>
 
@@ -460,16 +719,34 @@
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div id="log-widget-financial"></div>
-      <div class="notes-label">Notes <span class="save-indicator" id="save-financial">&#10003; Saved</span></div>
-      <textarea class="notes-area" id="notes-financial" placeholder="SSI/SSDI status, Social Security income, bills, other benefit programs..." oninput="saveNote('financial')" rows="4"></textarea>
-      <div class="notes-label">Documents</div><div id="docs-financial"></div>
-      <div class="notes-label">Action Items</div>
-      <ul class="action-list" id="actions-financial"></ul>
-      <div class="add-action-row">
-        <input class="add-action-input" id="input-financial" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('financial')">
-        <button class="add-btn" onclick="addAction('financial')">+ Add</button>
+      <div class="subsection" id="subsec-log-financial">
+      <div class="subsection-header" onclick="toggleSub('log-financial')">
+        <span class="subsection-title">&#128203; Log</span>
+        <span class="subsection-toggle">&#9660;</span>
       </div>
+      <div class="subsection-body">
+        <div id="log-widget-financial"></div>
+      </div></div>
+      <div class="notes-label">Notes</span>
+        <div class="notes-toggle-right"><span class="notes-save" id="save-financial">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+      </div>
+      <div class="notes-collapse" id="notes-collapse-financial">
+        <textarea class="notes-area" id="notes-financial" placeholder="SSI/SSDI status, Social Security income, bills, other benefit programs..." oninput="saveNote('financial')" rows="4"></textarea>
+      </div>
+      <div class="notes-toggle" id="notes-toggle-emergency" onclick="toggleNotes('emergency')">
+        <span class="notes-toggle-label">Documents</div><div id="docs-financial"></div>
+      <div class="subsection" id="subsec-actions-financial">
+      <div class="subsection-header" onclick="toggleSub('actions-financial')">
+        <span class="subsection-title">&#9989; Action Items</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
+        <ul class="action-list" id="actions-financial"></ul>
+        <div class="add-action-row">
+          <input class="add-action-input" id="input-financial" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('financial')">
+          <button class="add-btn" onclick="addAction('financial')">+ Add</button>
+        </div>
+      </div></div>
     </div>
   </div>
 
@@ -481,16 +758,40 @@
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div id="log-widget-emergency"></div>
-      <div class="notes-label">Notes <span class="save-indicator" id="save-emergency">&#10003; Saved</span></div>
-      <textarea class="notes-area" id="notes-emergency" placeholder="Emergency contacts, hospital preference, advance directives, POA info, document locations..." oninput="saveNote('emergency')" rows="4"></textarea>
-      <div class="notes-label">Documents</div><div id="docs-emergency"></div>
-      <div class="notes-label">Action Items</div>
-      <ul class="action-list" id="actions-emergency"></ul>
-      <div class="add-action-row">
-        <input class="add-action-input" id="input-emergency" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('emergency')">
-        <button class="add-btn" onclick="addAction('emergency')">+ Add</button>
+      <div class="subsection" id="subsec-log-emergency">
+      <div class="subsection-header" onclick="toggleSub('log-emergency')">
+        <span class="subsection-title">&#128203; Log</span>
+        <span class="subsection-toggle">&#9660;</span>
       </div>
+      <div class="subsection-body">
+        <div id="log-widget-emergency"></div>
+      </div></div>
+      <div class="notes-label">Notes</span>
+        <div class="notes-toggle-right"><span class="notes-save" id="save-emergency">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+      </div>
+      <div class="notes-collapse" id="notes-collapse-emergency">
+        <textarea class="notes-area" id="notes-emergency" placeholder="Emergency contacts, hospital preference, advance directives, POA info, document locations..." oninput="saveNote('emergency')" rows="4"></textarea>
+      </div>
+      <div class="subsection" id="subsec-docs-emergency">
+      <div class="subsection-header" onclick="toggleSub('docs-emergency')">
+        <span class="subsection-title">&#128196; Documents</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
+        <div id="docs-emergency"></div>
+      </div></div>
+      <div class="subsection" id="subsec-actions-emergency">
+      <div class="subsection-header" onclick="toggleSub('actions-emergency')">
+        <span class="subsection-title">&#9989; Action Items</span>
+        <span class="subsection-toggle">&#9660;</span>
+      </div>
+      <div class="subsection-body">
+        <ul class="action-list" id="actions-emergency"></ul>
+        <div class="add-action-row">
+          <input class="add-action-input" id="input-emergency" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('emergency')">
+          <button class="add-btn" onclick="addAction('emergency')">+ Add</button>
+        </div>
+      </div></div>
     </div>
   </div>
 </div>
@@ -606,6 +907,7 @@ function renderAll() {
   logKeys.forEach(k => renderLog(k));
   docSections.forEach(k => renderDocs(k));
   renderAppts();
+  renderMasterTodo();
 }
 
 function todayStr() { const d=new Date(); return (d.getMonth()+1)+'/'+d.getDate(); }
@@ -614,13 +916,35 @@ function updateTimestamp() {
   document.getElementById('lastUpdated').textContent='Last updated: '+now.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
 }
 window.toggle = id => document.getElementById(id).classList.toggle('open');
-window.expandAll = () => document.querySelectorAll('.section').forEach(s=>s.classList.add('open'));
+window.expandAll = () => {
+  document.querySelectorAll('.section').forEach(s=>s.classList.add('open'));
+  document.querySelectorAll('.subsection').forEach(s=>s.classList.add('open'));
+  document.querySelectorAll('.notes-toggle').forEach(t=>t.classList.add('open'));
+  document.querySelectorAll('.notes-collapse').forEach(c=>c.classList.add('open'));
+};
+window.toggleSub = function(key) {
+  const el = document.getElementById('subsec-'+key);
+  if(el) el.classList.toggle('open');
+};
+window.toggleNotes = function(key) {
+  const toggle = document.getElementById('notes-toggle-'+key);
+  const collapse = document.getElementById('notes-collapse-'+key);
+  if(toggle && collapse) {
+    toggle.classList.toggle('open');
+    collapse.classList.toggle('open');
+    if(collapse.classList.contains('open')) {
+      const ta = document.getElementById('notes-'+key);
+      if(ta) setTimeout(()=>ta.focus(),50);
+    }
+  }
+};
 
 window.saveNote = function(key) {
   if(!state.notes) state.notes={};
-  state.notes[key]=document.getElementById('notes-'+key).value;
+  const el = document.getElementById('notes-'+key);
+  if(el) state.notes[key]=el.value;
   const ind=document.getElementById('save-'+key);
-  ind.classList.add('show'); setTimeout(()=>ind.classList.remove('show'),1500);
+  if(ind){ ind.classList.add('show'); setTimeout(()=>ind.classList.remove('show'),1500); }
   saveToFirestore();
 };
 
@@ -628,9 +952,9 @@ window.addAction = function(key) {
   const inp=document.getElementById('input-'+key); const text=inp.value.trim(); if(!text) return;
   if(!state.actions[key]) state.actions[key]=[];
   state.actions[key].push({text,done:false});
-  saveToFirestore(); renderActions(key); inp.value='';
+  saveToFirestore(); renderActions(key); renderMasterTodo(); inp.value='';
 };
-function toggleAction(key,idx) { state.actions[key][idx].done=!state.actions[key][idx].done; saveToFirestore(); renderActions(key); }
+function toggleAction(key,idx) { state.actions[key][idx].done=!state.actions[key][idx].done; saveToFirestore(); renderActions(key); renderMasterTodo(); }
 function renderActions(key) {
   const ul=document.getElementById('actions-'+key); if(!ul) return; ul.innerHTML='';
   (state.actions[key]||[]).forEach((item,i)=>{
@@ -732,6 +1056,83 @@ function renderAppts() {
   badge.textContent=upcoming===0?'None Upcoming':upcoming+' Upcoming';
   badge.className='section-badge '+(upcoming>0?'badge-blue':'badge-gray');
 }
+
+const sectionLabels = {
+  social:'Social Worker',snap:'SNAP / EBT',medicaid:'Medicaid',
+  medical:'Medical',therapy:'Therapy',authority:'Care Authority',
+  housing:'Housing',financial:'Financial',emergency:'Emergency'
+};
+let completedMasterOpen = false;
+
+window.addMasterAction = function() {
+  const inp = document.getElementById('master-input');
+  const sel = document.getElementById('master-section-select');
+  const text = inp.value.trim(); if(!text) return;
+  const key = sel.value;
+  if(!state.actions[key]) state.actions[key]=[];
+  state.actions[key].push({text,done:false});
+  saveToFirestore(); renderActions(key); renderMasterTodo(); inp.value='';
+};
+
+window.toggleMasterAction = function(key, idx) {
+  state.actions[key][idx].done = !state.actions[key][idx].done;
+  saveToFirestore(); renderActions(key); renderMasterTodo();
+};
+
+window.toggleCompletedMaster = function() {
+  completedMasterOpen = !completedMasterOpen;
+  const body = document.getElementById('completed-body');
+  const icon = document.getElementById('completed-toggle-icon');
+  const label = document.getElementById('completed-toggle-label');
+  body.classList.toggle('open', completedMasterOpen);
+  icon.textContent = completedMasterOpen ? '▲' : '▼';
+  label.textContent = completedMasterOpen ? 'Hide Completed' : 'Show Completed';
+};
+
+function renderMasterTodo() {
+  const openList = document.getElementById('master-todo-list');
+  const doneList = document.getElementById('master-completed-list');
+  if(!openList || !doneList) return;
+  openList.innerHTML = ''; doneList.innerHTML = '';
+  let openCount = 0, doneCount = 0;
+  noteSections.forEach(key => {
+    const items = state.actions[key] || [];
+    items.forEach((item, idx) => {
+      const li = document.createElement('li');
+      li.className = 'master-todo-item';
+      const chk = document.createElement('div');
+      chk.className = 'action-check' + (item.done ? ' checked' : '');
+      chk.onclick = () => toggleMasterAction(key, idx);
+      const src = document.createElement('span');
+      src.className = 'master-todo-source';
+      src.textContent = sectionLabels[key] || key;
+      const sp = document.createElement('span');
+      sp.className = 'master-todo-text' + (item.done ? ' done' : '');
+      sp.textContent = item.text;
+      li.appendChild(chk); li.appendChild(src); li.appendChild(sp);
+      if(item.done) { doneList.appendChild(li); doneCount++; }
+      else { openList.appendChild(li); openCount++; }
+    });
+  });
+  if(openCount === 0) {
+    const empty = document.createElement('p');
+    empty.className = 'master-empty';
+    empty.textContent = 'No open to-dos — great job!';
+    openList.appendChild(empty);
+  }
+  if(doneCount === 0) {
+    const empty = document.createElement('p');
+    empty.className = 'master-empty';
+    empty.textContent = 'No completed items yet.';
+    doneList.appendChild(empty);
+  }
+  const badge = document.getElementById('master-badge');
+  if(badge) {
+    badge.textContent = openCount === 0 ? 'All Done!' : openCount + ' Open';
+    badge.className = 'section-badge ' + (openCount === 0 ? 'badge-green' : 'badge-rose');
+  }
+}
+
 </script>
 </body>
 </html>
