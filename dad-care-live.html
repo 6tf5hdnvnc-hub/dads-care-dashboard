@@ -15,6 +15,8 @@
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--slate);min-height:100vh;line-height:1.6;}
+
+  /* AUTH */
   .auth-overlay{position:fixed;inset:0;background:var(--bark);display:flex;align-items:center;justify-content:center;z-index:9999;}
   .auth-overlay.hidden{display:none;}
   .auth-box{background:var(--warm-white);border-radius:18px;padding:40px 36px 36px;width:320px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
@@ -28,9 +30,13 @@
   .auth-btn{width:100%;background:var(--sage);color:white;border:none;border-radius:10px;padding:13px;font-family:'Source Sans 3',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:background 0.15s;}
   .auth-btn:hover{background:var(--bark-light);}
   .auth-error{font-size:0.82rem;color:var(--rose);margin-top:10px;min-height:18px;}
+
+  /* SYNC */
   .sync-banner{background:var(--sage);color:white;text-align:center;padding:8px;font-size:0.82rem;font-weight:600;display:none;}
   .sync-banner.show{display:block;}
   .sync-banner.error{background:var(--rose);}
+
+  /* HEADER */
   .header{background:var(--bark);color:var(--cream);padding:32px 40px 28px;position:relative;overflow:hidden;}
   .header::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.05);}
   .header::after{content:'';position:absolute;bottom:-40px;left:30%;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.04);}
@@ -38,14 +44,38 @@
   .header h1{font-family:'Lora',serif;font-size:1.9rem;font-weight:600;letter-spacing:-0.01em;margin-bottom:4px;}
   .header p{font-size:0.95rem;opacity:0.75;font-weight:300;}
   .last-updated{font-size:0.8rem;opacity:0.6;margin-top:8px;font-style:italic;}
+  .version-tag{font-size:0.72rem;opacity:0.5;margin-top:2px;}
+
+  /* LAYOUT */
   .container{max-width:860px;margin:0 auto;padding:36px 20px 60px;}
   .status-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
   .status-chip{display:flex;align-items:center;gap:7px;background:var(--warm-white);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.82rem;font-weight:600;color:var(--slate);}
   .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
   .dot-green{background:#4caf7d;}.dot-amber{background:var(--amber);}.dot-rose{background:var(--rose);}.dot-blue{background:#5b8dee;}
-  .toolbar{display:flex;justify-content:flex-end;gap:10px;margin-bottom:24px;}
+
+  /* TOOLBAR */
+  .toolbar{display:flex;justify-content:flex-end;gap:10px;margin-bottom:16px;flex-wrap:wrap;}
   .toolbar-btn{display:flex;align-items:center;gap:6px;background:var(--warm-white);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;font-weight:600;color:var(--slate);cursor:pointer;transition:all 0.2s;}
   .toolbar-btn:hover{background:var(--sage-pale);border-color:var(--sage-light);color:var(--bark);}
+  .edit-mode-btn{background:var(--amber-pale);border-color:var(--amber);}
+  .edit-mode-btn.active{background:var(--sage);border-color:var(--sage);color:white;}
+
+  /* EDIT MODE */
+  .edit-hint{display:none;font-size:0.78rem;color:var(--sage);font-style:italic;margin-bottom:16px;padding:8px 12px;background:var(--sage-pale);border-radius:8px;border:1px solid var(--sage-light);}
+  body.edit-mode .edit-hint{display:block;}
+  body.edit-mode e{cursor:text;border-bottom:1.5px dashed var(--sage-light);padding-bottom:1px;}
+  body.edit-mode e:hover{background:rgba(124,158,138,0.1);}
+  body.edit-mode e:focus{outline:none;background:rgba(124,158,138,0.15);border-bottom-color:var(--sage);}
+  body:not(.edit-mode) e{pointer-events:none;}
+  body.edit-mode .contact-row a{pointer-events:none;color:var(--sage);}
+  body:not(.edit-mode) .contact-row a{pointer-events:auto;}
+  body.edit-mode .action-del{display:inline-flex !important;}
+  .action-del{display:none;background:none;border:none;color:#ccc;cursor:pointer;font-size:0.8rem;padding:0 3px;margin-left:4px;line-height:1;transition:color 0.15s;}
+  .action-del:hover{color:var(--rose);}
+  body.edit-mode .appt-edit-cell{cursor:text;border-bottom:1.5px dashed var(--sage-light);}
+  body.edit-mode .appt-edit-cell:focus{outline:none;background:rgba(124,158,138,0.1);}
+
+  /* SECTIONS */
   .section{background:var(--warm-white);border:1px solid var(--border);border-radius:14px;margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow 0.2s;}
   .section:hover{box-shadow:var(--shadow-hover);}
   .section-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 16px;cursor:pointer;user-select:none;border-bottom:1px solid transparent;transition:border-color 0.2s;}
@@ -63,82 +93,8 @@
   .section.open .toggle-icon{transform:rotate(180deg);}
   .section-body{display:none;padding:20px 22px 22px;}
   .section.open .section-body{display:block;}
-  .appt-table{width:100%;border-collapse:collapse;font-size:0.88rem;margin-bottom:14px;}
-  .appt-table th{text-align:left;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--slate-light);padding:6px 10px;border-bottom:2px solid var(--border);}
-  .appt-table td{padding:10px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
-  .appt-table tr:last-child td{border-bottom:none;}
-  .appt-table tr:hover td{background:var(--cream);}
-  .appt-upcoming{color:var(--rose);font-weight:600;}.appt-past{color:var(--slate-light);}
-  .appt-tag{display:inline-block;font-size:0.7rem;font-weight:600;padding:2px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:0.04em;}
-  .tag-virtual{background:#e0f0fd;color:#1a5a8a;}.tag-inperson{background:var(--sage-pale);color:#2a5a3a;}
-  .tag-phone{background:var(--amber-pale);color:#7a4a10;}.tag-past{background:#eee;color:#888;}
-  .appt-add-row{display:grid;grid-template-columns:120px 1fr 1fr 90px auto;gap:8px;margin-top:10px;align-items:center;}
-  .appt-input{background:var(--cream);border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.83rem;color:var(--slate);outline:none;width:100%;transition:border-color 0.2s;}
-  .appt-input:focus{border-color:var(--sage);}
-  .contacts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:4px;}
-  .contact-card{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
-  .contact-name{font-weight:600;color:var(--bark);margin-bottom:6px;font-size:0.95rem;}
-  .contact-row{display:flex;align-items:flex-start;gap:7px;font-size:0.84rem;color:var(--slate-light);margin-bottom:3px;}
-  .contact-row a{color:var(--sage);text-decoration:none;word-break:break-all;}
-  .contact-row a:hover{text-decoration:underline;}
-  .contact-label{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--slate-light);opacity:0.7;margin-top:5px;}
-  .log-widget{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:12px;}
-  .log-widget-title{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--slate-light);margin-bottom:10px;}
-  .log-entries{list-style:none;margin-bottom:10px;}
-  .log-entry{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.85rem;}
-  .log-entry:last-child{border-bottom:none;}
-  .log-date{color:var(--bark);font-weight:600;white-space:nowrap;min-width:44px;border-radius:4px;padding:1px 3px;}
-  .log-date:focus{outline:none;background:rgba(124,158,138,0.12);box-shadow:0 0 0 2px rgba(124,158,138,0.3);}
-  .log-text{flex:1;color:var(--slate);line-height:1.5;border-radius:4px;padding:1px 4px;}
-  .log-text:focus{outline:none;background:rgba(124,158,138,0.1);box-shadow:0 0 0 2px rgba(124,158,138,0.25);}
-  .log-delete{background:none;border:none;color:#ccc;cursor:pointer;font-size:0.9rem;padding:0 2px;line-height:1;flex-shrink:0;transition:color 0.15s;}
-  .log-delete:hover{color:var(--rose);}
-  .log-add-row{display:flex;gap:7px;}
-  .log-date-input{width:80px;flex-shrink:0;background:var(--warm-white);border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--slate);outline:none;transition:border-color 0.2s;}
-  .log-date-input:focus{border-color:var(--sage);}
-  .log-text-input{flex:1;background:var(--warm-white);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--slate);outline:none;transition:border-color 0.2s;}
-  .log-text-input:focus{border-color:var(--sage);}
-  .log-add-btn{background:var(--sage);color:white;border:none;border-radius:6px;padding:6px 12px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background 0.15s;}
-  .log-add-btn:hover{background:var(--bark-light);}
-  .notes-label{font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--slate-light);margin-bottom:7px;margin-top:16px;}
-  .notes-area{width:100%;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:'Source Sans 3',sans-serif;font-size:0.9rem;color:var(--slate);line-height:1.65;resize:vertical;min-height:70px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
-  .notes-area:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(124,158,138,0.15);}
-  .notes-area::placeholder{color:#bbb;}
-  .save-indicator{display:inline-flex;align-items:center;font-size:0.75rem;color:var(--sage);opacity:0;transition:opacity 0.3s;margin-left:8px;}
-  .save-indicator.show{opacity:1;}
-  .action-list{list-style:none;margin-bottom:8px;}
-  .action-list li{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.88rem;}
-  .action-list li:last-child{border-bottom:none;}
-  .action-check{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--sage-light);flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
-  .action-check:hover{background:var(--sage-pale);border-color:var(--sage);}
-  .action-check.checked{background:var(--sage);border-color:var(--sage);}
-  .action-check.checked::after{content:'✓';color:white;font-size:11px;font-weight:700;}
-  .action-text{flex:1;line-height:1.5;}
-  .action-text.done{text-decoration:line-through;color:#aaa;}
-  .add-action-row{display:flex;gap:8px;margin-top:10px;}
-  .add-action-input{flex:1;background:var(--cream);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;color:var(--slate);outline:none;transition:border-color 0.2s;}
-  .add-action-input:focus{border-color:var(--sage);}
-  .add-btn{background:var(--sage);color:white;border:none;border-radius:7px;padding:7px 16px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;transition:background 0.15s;}
-  .add-btn:hover{background:var(--bark-light);}
-  .doc-list{list-style:none;margin-bottom:8px;}
-  .doc-entry{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.85rem;}
-  .doc-entry:last-child{border-bottom:none;}
-  .doc-link{flex:1;color:var(--sage);text-decoration:none;word-break:break-all;font-weight:500;}
-  .doc-link:hover{text-decoration:underline;}
-  .doc-empty{font-size:0.82rem;color:#bbb;padding:4px 0 8px;}
-  .doc-add-row{display:flex;gap:7px;flex-wrap:wrap;}
-  .doc-input{flex:1;min-width:120px;background:var(--warm-white);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--slate);outline:none;transition:border-color 0.2s;}
-  .doc-input:focus{border-color:var(--sage);}
-  .doc-add-btn{background:var(--sage);color:white;border:none;border-radius:6px;padding:6px 12px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background 0.15s;}
-  .doc-add-btn:hover{background:var(--bark-light);}
-  .status-block{background:var(--cream);border-left:3px solid var(--sage);border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:14px;font-size:0.88rem;}
-  .status-block.amber{border-left-color:var(--amber);}
-  .status-block.rose{border-left-color:var(--rose);}
-  .divider{height:1px;background:var(--border);margin:18px 0;}
-  .provider-label{font-size:0.82rem;font-weight:700;color:var(--bark);text-transform:uppercase;letter-spacing:0.05em;margin:18px 0 8px;}
-  .provider-label:first-child{margin-top:0;}
 
-  /* Collapsible sub-sections */
+  /* SUBSECTIONS */
   .subsection{background:var(--cream);border:1px solid var(--border);border-radius:10px;margin:10px 0;}
   .subsection-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;cursor:pointer;user-select:none;border-radius:10px;transition:background 0.15s;}
   .subsection-header:hover{background:var(--sage-pale);}
@@ -149,25 +105,106 @@
   .subsection-body{display:none;padding:12px 14px 14px;}
   .subsection.open .subsection-body{display:block;}
 
-  /* Expandable notes */
-  .notes-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin-top:16px;padding:8px 10px;background:var(--cream);border:1px solid var(--border);border-radius:8px;transition:background 0.15s;}
+  /* APPOINTMENTS */
+  .appt-table{width:100%;border-collapse:collapse;font-size:0.88rem;margin-bottom:14px;}
+  .appt-table th{text-align:left;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--slate-light);padding:6px 10px;border-bottom:2px solid var(--border);}
+  .appt-table td{padding:10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  .appt-table tr:last-child td{border-bottom:none;}
+  .appt-table tr:hover td{background:var(--cream);}
+  .appt-upcoming{color:var(--rose);font-weight:600;}.appt-past{color:var(--slate-light);}
+  .appt-tag{display:inline-block;font-size:0.7rem;font-weight:600;padding:2px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:0.04em;}
+  .tag-virtual{background:#e0f0fd;color:#1a5a8a;}.tag-inperson{background:var(--sage-pale);color:#2a5a3a;}
+  .tag-phone{background:var(--amber-pale);color:#7a4a10;}.tag-past{background:#eee;color:#888;}
+  .appt-add-row{display:grid;grid-template-columns:120px 1fr 1fr 90px auto;gap:8px;margin-top:10px;align-items:center;}
+  .appt-input{background:var(--cream);border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.83rem;color:var(--slate);outline:none;width:100%;transition:border-color 0.2s;}
+  .appt-input:focus{border-color:var(--sage);}
+
+  /* CONTACTS */
+  .contacts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:4px;}
+  .contact-card{background:var(--warm-white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+  .contact-name{font-weight:600;color:var(--bark);margin-bottom:6px;font-size:0.95rem;}
+  .contact-row{display:flex;align-items:flex-start;gap:7px;font-size:0.84rem;color:var(--slate-light);margin-bottom:3px;}
+  .contact-row a{color:var(--sage);text-decoration:none;word-break:break-all;}
+  .contact-row a:hover{text-decoration:underline;}
+  .contact-label{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--slate-light);opacity:0.7;margin-top:5px;}
+  .provider-label{font-size:0.82rem;font-weight:700;color:var(--bark);text-transform:uppercase;letter-spacing:0.05em;margin:16px 0 8px;}
+  .provider-label:first-child{margin-top:0;}
+  .divider{height:1px;background:var(--border);margin:16px 0;}
+  .status-block{background:var(--cream);border-left:3px solid var(--sage);border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:14px;font-size:0.88rem;}
+  .status-block.amber{border-left-color:var(--amber);}
+  .status-block.rose{border-left-color:var(--rose);}
+
+  /* LOGS */
+  .log-widget{background:var(--warm-white);border:1px solid var(--border);border-radius:8px;padding:12px 14px;}
+  .log-widget-title{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--slate-light);margin-bottom:10px;}
+  .log-entries{list-style:none;margin-bottom:10px;}
+  .log-entry{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.85rem;}
+  .log-entry:last-child{border-bottom:none;}
+  .log-date{color:var(--bark);font-weight:600;white-space:nowrap;min-width:44px;border-radius:4px;padding:1px 3px;}
+  .log-date:focus{outline:none;background:rgba(124,158,138,0.12);}
+  .log-text{flex:1;color:var(--slate);line-height:1.5;border-radius:4px;padding:1px 4px;}
+  .log-text:focus{outline:none;background:rgba(124,158,138,0.1);}
+  .log-delete{background:none;border:none;color:#ccc;cursor:pointer;font-size:0.9rem;padding:0 2px;line-height:1;flex-shrink:0;transition:color 0.15s;}
+  .log-delete:hover{color:var(--rose);}
+  .log-add-row{display:flex;gap:7px;}
+  .log-date-input{width:80px;flex-shrink:0;background:var(--cream);border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--slate);outline:none;}
+  .log-date-input:focus{border-color:var(--sage);}
+  .log-text-input{flex:1;background:var(--cream);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--slate);outline:none;}
+  .log-text-input:focus{border-color:var(--sage);}
+  .log-add-btn{background:var(--sage);color:white;border:none;border-radius:6px;padding:6px 12px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .log-add-btn:hover{background:var(--bark-light);}
+
+  /* NOTES */
+  .notes-toggle{display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;margin-top:10px;padding:9px 12px;background:var(--cream);border:1px solid var(--border);border-radius:8px;transition:background 0.15s;}
   .notes-toggle:hover{background:var(--sage-pale);}
   .notes-toggle.open{border-radius:8px 8px 0 0;border-bottom-color:transparent;}
   .notes-toggle-label{font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--slate-light);}
-  .notes-save{font-size:0.75rem;color:var(--sage);opacity:0;transition:opacity 0.3s;margin-left:8px;}
-  .notes-save.show{opacity:1;}
   .notes-toggle-right{display:flex;align-items:center;gap:6px;}
+  .notes-save{font-size:0.75rem;color:var(--sage);opacity:0;transition:opacity 0.3s;}
+  .notes-save.show{opacity:1;}
   .notes-toggle-icon{font-size:0.75rem;color:var(--slate-light);transition:transform 0.2s;}
   .notes-toggle.open .notes-toggle-icon{transform:rotate(180deg);}
   .notes-collapse{display:none;}
   .notes-collapse.open{display:block;}
-  .notes-collapse .notes-area{border-radius:0 0 8px 8px;margin-top:0;}
+  .notes-collapse .notes-area{border-radius:0 0 8px 8px;border-top:none;margin-top:0;}
+  .notes-area{width:100%;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:'Source Sans 3',sans-serif;font-size:0.9rem;color:var(--slate);line-height:1.65;resize:vertical;min-height:70px;outline:none;transition:border-color 0.2s;}
+  .notes-area:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(124,158,138,0.12);}
+  .notes-area::placeholder{color:#bbb;}
 
-  /* Master To-Do */
+  /* ACTIONS */
+  .action-list{list-style:none;margin-bottom:8px;}
+  .action-list li{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.88rem;}
+  .action-list li:last-child{border-bottom:none;}
+  .action-check{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--sage-light);flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+  .action-check:hover{background:var(--sage-pale);border-color:var(--sage);}
+  .action-check.checked{background:var(--sage);border-color:var(--sage);}
+  .action-check.checked::after{content:'✓';color:white;font-size:11px;font-weight:700;}
+  .action-text{flex:1;line-height:1.5;}
+  .action-text.done{text-decoration:line-through;color:#aaa;}
+  .add-action-row{display:flex;gap:8px;margin-top:10px;}
+  .add-action-input{flex:1;background:var(--warm-white);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;color:var(--slate);outline:none;transition:border-color 0.2s;}
+  .add-action-input:focus{border-color:var(--sage);}
+  .add-btn{background:var(--sage);color:white;border:none;border-radius:7px;padding:7px 16px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;transition:background 0.15s;}
+  .add-btn:hover{background:var(--bark-light);}
+
+  /* DOCUMENTS */
+  .doc-list{list-style:none;margin-bottom:8px;}
+  .doc-entry{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.85rem;}
+  .doc-entry:last-child{border-bottom:none;}
+  .doc-link{flex:1;color:var(--sage);text-decoration:none;word-break:break-all;font-weight:500;}
+  .doc-link:hover{text-decoration:underline;}
+  .doc-empty{font-size:0.82rem;color:#bbb;padding:4px 0 8px;}
+  .doc-add-row{display:flex;gap:7px;flex-wrap:wrap;}
+  .doc-input{flex:1;min-width:120px;background:var(--warm-white);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--slate);outline:none;}
+  .doc-input:focus{border-color:var(--sage);}
+  .doc-add-btn{background:var(--sage);color:white;border:none;border-radius:6px;padding:6px 12px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .doc-add-btn:hover{background:var(--bark-light);}
+
+  /* MASTER TODO */
   .master-todo-list{list-style:none;margin-bottom:8px;}
   .master-todo-item{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.88rem;}
   .master-todo-item:last-child{border-bottom:none;}
-  .master-todo-source{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--slate-light);white-space:nowrap;margin-top:3px;min-width:80px;}
+  .master-todo-source{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:var(--slate-light);white-space:nowrap;margin-top:3px;min-width:90px;}
   .master-todo-text{flex:1;line-height:1.5;}
   .master-todo-text.done{text-decoration:line-through;color:#aaa;}
   .master-empty{font-size:0.85rem;color:#bbb;padding:8px 0;}
@@ -175,32 +212,9 @@
   .completed-toggle:hover{color:var(--bark);}
   .completed-body{display:none;}
   .completed-body.open{display:block;}
-  .master-add-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
-  .master-section-select{background:var(--cream);border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;color:var(--slate);outline:none;transition:border-color 0.2s;}
+  .master-add-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+  .master-section-select{background:var(--warm-white);border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;color:var(--slate);outline:none;}
   .master-section-select:focus{border-color:var(--sage);}
-
-  /* Edit Mode */
-  .edit-mode-btn{background:var(--amber-pale);border-color:var(--amber);color:var(--bark);}
-  .edit-mode-btn:hover{background:var(--amber);color:white;}
-  .edit-mode-btn.active{background:var(--sage);border-color:var(--sage);color:white;}
-  body.edit-mode .editable{cursor:text;border-bottom:1.5px dashed var(--sage-light);padding-bottom:1px;min-width:20px;display:inline-block;transition:background 0.15s;}
-  body.edit-mode .editable:hover{background:rgba(124,158,138,0.1);}
-  body.edit-mode .editable:focus{outline:none;background:rgba(124,158,138,0.15);border-bottom-color:var(--sage);box-shadow:none;}
-  body:not(.edit-mode) .editable{cursor:default;}
-  body.edit-mode .edit-delete-btn{display:inline-flex;}
-  .edit-delete-btn{display:none;background:none;border:none;color:#ccc;cursor:pointer;font-size:0.8rem;padding:0 3px;vertical-align:middle;transition:color 0.15s;}
-  .edit-delete-btn:hover{color:var(--rose);}
-  body.edit-mode .contact-row a{pointer-events:none;}
-  body:not(.edit-mode) .contact-row a{pointer-events:auto;}
-  .edit-hint{display:none;font-size:0.75rem;color:var(--sage);font-style:italic;margin-bottom:12px;padding:6px 10px;background:var(--sage-pale);border-radius:6px;}
-  body.edit-mode .edit-hint{display:block;}
-  /* Action item delete in edit mode */
-  body.edit-mode .action-del{display:inline-flex;}
-  .action-del{display:none;background:none;border:none;color:#ccc;cursor:pointer;font-size:0.8rem;padding:0 3px;margin-left:4px;transition:color 0.15s;}
-  .action-del:hover{color:var(--rose);}
-  /* Appointment edit */
-  body.edit-mode .appt-edit-cell{cursor:text;border-bottom:1.5px dashed var(--sage-light);}
-  body.edit-mode .appt-edit-cell:focus{outline:none;background:rgba(124,158,138,0.1);}
 
   @media(max-width:640px){
     .header{padding:24px 16px 20px;}.header h1{font-size:1.4rem;}
@@ -224,19 +238,22 @@
     .add-action-row{flex-wrap:wrap;}
     .add-action-input,.add-btn{width:100%;}
     .auth-box{width:calc(100vw - 48px);padding:32px 24px 28px;}
+    .master-add-row{flex-direction:column;}
+    .master-section-select{width:100%;}
   }
 </style>
 </head>
 <body>
 
+<!-- AUTH -->
 <div class="auth-overlay" id="authOverlay">
   <div class="auth-box">
-    <div class="auth-lock">🔒</div>
+    <div class="auth-lock">&#128274;</div>
     <h2>Dad's Care Dashboard</h2>
     <p>Enter password to continue</p>
     <div class="auth-input-wrap">
       <input class="auth-input" type="password" id="authInput" placeholder="Password" onkeydown="if(event.key==='Enter') authSubmit()">
-      <button class="auth-toggle" onclick="toggleAuthVis()" id="authToggle">👁</button>
+      <button class="auth-toggle" onclick="toggleAuthVis()">&#128065;</button>
     </div>
     <button class="auth-btn" onclick="authSubmit()">Unlock</button>
     <div class="auth-error" id="authError"></div>
@@ -249,7 +266,8 @@
   <div class="header-inner">
     <h1>Dad's Care Coordination</h1>
     <p>Benefits, services &amp; support — all in one place</p>
-    <div class="last-updated" id="lastUpdated">Last updated: April 27, 2026</div>
+    <div class="last-updated" id="lastUpdated">Last updated: April 28, 2026</div>
+    <div class="version-tag">v6</div>
   </div>
 </div>
 
@@ -261,18 +279,20 @@
     <div class="status-chip"><span class="status-dot dot-amber"></span>Therapy — In Progress</div>
     <div class="status-chip"><span class="status-dot dot-blue"></span>Neurology — Appt 4/28</div>
   </div>
+
   <div class="toolbar">
-    <button class="toolbar-btn" onclick="expandAll()">&#x229E; Expand All</button>
     <button class="toolbar-btn edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">&#9998; Edit Mode</button>
+    <button class="toolbar-btn" onclick="expandAll()">&#x229E; Expand All</button>
     <button class="toolbar-btn" onclick="window.print()">&#128424; Print / Save PDF</button>
   </div>
 
-  <div class="edit-hint">&#9998; Edit mode is on — click any text to edit it. Changes save automatically.</div>
+  <div class="edit-hint">&#9998; Edit mode is on — click any underlined text to edit it. Changes save automatically when you exit edit mode.</div>
 
+  <!-- APPOINTMENTS -->
   <div class="section open" id="sec-appts">
     <div class="section-header" onclick="toggle('sec-appts')">
       <div class="section-title-row"><div class="section-icon icon-teal">&#128197;</div>
-        <div><div class="section-title">Upcoming Appointments</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">All scheduled visits &amp; calls</span></div></div>
+        <div><div class="section-title">Upcoming Appointments</div><div class="section-subtitle">All scheduled visits &amp; calls</div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-blue" id="appt-badge">1 Upcoming</span><span class="toggle-icon">&#9660;</span></div>
     </div>
@@ -282,9 +302,9 @@
         <tbody id="appt-tbody"></tbody>
       </table>
       <div class="appt-add-row">
-        <input class="appt-input" id="appt-date" type="text" placeholder="Date &amp; time">
-        <input class="appt-input" id="appt-provider" type="text" placeholder="Provider / Dept.">
-        <input class="appt-input" id="appt-purpose" type="text" placeholder="Purpose / notes">
+        <input class="appt-input" id="appt-date" placeholder="Date &amp; time">
+        <input class="appt-input" id="appt-provider" placeholder="Provider / Dept.">
+        <input class="appt-input" id="appt-purpose" placeholder="Purpose / notes">
         <select class="appt-input" id="appt-type">
           <option value="virtual">Virtual</option><option value="inperson">In-Person</option>
           <option value="phone">Phone</option><option value="past">Past</option>
@@ -294,11 +314,11 @@
     </div>
   </div>
 
-
+  <!-- MASTER TO-DO -->
   <div class="section open" id="sec-master">
     <div class="section-header" onclick="toggle('sec-master')">
       <div class="section-title-row"><div class="section-icon icon-teal">&#9989;</div>
-        <div><div class="section-title">Master To-Do List</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">All action items across every section</span></div></div>
+        <div><div class="section-title">Master To-Do List</div><div class="section-subtitle">All action items across every section</div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-rose" id="master-badge">0 Open</span><span class="toggle-icon">&#9660;</span></div>
     </div>
@@ -313,14 +333,10 @@
       </div>
       <div class="master-add-row">
         <select class="master-section-select" id="master-section-select">
-          <option value="social">Social Worker</option>
-          <option value="snap">SNAP / EBT</option>
-          <option value="medicaid">Medicaid</option>
-          <option value="medical">Medical</option>
-          <option value="therapy">Therapy</option>
-          <option value="authority">Care Authority</option>
-          <option value="housing">Housing</option>
-          <option value="financial">Financial</option>
+          <option value="social">Social Worker</option><option value="snap">SNAP / EBT</option>
+          <option value="medicaid">Medicaid</option><option value="medical">Medical</option>
+          <option value="therapy">Therapy</option><option value="authority">Care Authority</option>
+          <option value="housing">Housing</option><option value="financial">Financial</option>
           <option value="emergency">Emergency</option>
         </select>
         <input class="add-action-input" id="master-input" placeholder="Add a to-do..." style="flex:1" onkeydown="if(event.key==='Enter') addMasterAction()">
@@ -329,27 +345,24 @@
     </div>
   </div>
 
+  <!-- SOCIAL WORKER -->
   <div class="section open" id="sec-social">
     <div class="section-header" onclick="toggle('sec-social')">
       <div class="section-title-row"><div class="section-icon icon-sage">&#129309;</div>
-        <div><div class="section-title">Social Worker</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Primary care coordinator</span></div></div>
+        <div><div class="section-title">Social Worker</div><div class="section-subtitle"><e>Primary care coordinator</e></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-green">Active</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Ms. Robinson</span></div>
-        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17042087622">+1 (704) 208-7622</a></div>
-        <div class="contact-label">Email</div><div class="contact-row">&#9993;&#65039; <a href="mailto:Yaisha.Robinson@mecklenburgcountync.gov">Yaisha.Robinson@mecklenburgcountync.gov</a></div>
+        <div class="contact-name"><e>Ms. Robinson</e></div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17042087622"><e>+1 (704) 208-7622</e></a></div>
+        <div class="contact-label">Email</div><div class="contact-row">&#9993; <a href="mailto:Yaisha.Robinson@mecklenburgcountync.gov"><e>Yaisha.Robinson@mecklenburgcountync.gov</e></a></div>
       </div></div>
       <div class="subsection" id="subsec-log-social">
-      <div class="subsection-header" onclick="toggleSub('log-social')">
-        <span class="subsection-title">&#128203; Contact Log</span>
-        <span class="subsection-toggle">&#9660;</span>
+        <div class="subsection-header" onclick="toggleSub('log-social')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="log-widget-social"></div></div>
       </div>
-      <div class="subsection-body">
-        <div id="log-widget-social"></div>
-      </div></div>
       <div class="notes-toggle" id="notes-toggle-social" onclick="toggleNotes('social')">
         <span class="notes-toggle-label">Notes</span>
         <div class="notes-toggle-right"><span class="notes-save" id="save-social">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
@@ -357,470 +370,446 @@
       <div class="notes-collapse" id="notes-collapse-social">
         <textarea class="notes-area" id="notes-social" placeholder="Latest conversations, what was discussed, next steps..." oninput="saveNote('social')" rows="3"></textarea>
       </div>
-      <div class="notes-toggle" id="notes-toggle-snap" onclick="toggleNotes('snap')">
-        <span class="notes-toggle-label">Documents</div><div id="docs-social"></div>
-      <div class="subsection" id="subsec-actions-social">
-      <div class="subsection-header" onclick="toggleSub('actions-social')">
-        <span class="subsection-title">&#9989; Action Items</span>
-        <span class="subsection-toggle">&#9660;</span>
+      <div class="subsection" id="subsec-docs-social">
+        <div class="subsection-header" onclick="toggleSub('docs-social')"><span class="subsection-title">&#128196; Documents</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="docs-social"></div></div>
       </div>
-      <div class="subsection-body">
-        <ul class="action-list" id="actions-social"></ul>
-        <div class="add-action-row">
-          <input class="add-action-input" id="input-social" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('social')">
-          <button class="add-btn" onclick="addAction('social')">+ Add</button>
+      <div class="subsection" id="subsec-actions-social">
+        <div class="subsection-header" onclick="toggleSub('actions-social')"><span class="subsection-title">&#9989; Action Items</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <ul class="action-list" id="actions-social"></ul>
+          <div class="add-action-row">
+            <input class="add-action-input" id="input-social" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('social')">
+            <button class="add-btn" onclick="addAction('social')">+ Add</button>
+          </div>
         </div>
-      </div></div>
+      </div>
     </div>
   </div>
 
+  <!-- SNAP / EBT -->
   <div class="section open" id="sec-snap">
     <div class="section-header" onclick="toggle('sec-snap')">
       <div class="section-title-row"><div class="section-icon icon-amber">&#128717;</div>
-        <div><div class="section-title">SNAP / EBT (Food Stamps)</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Approved — EBT card not yet received</span></div></div>
+        <div><div class="section-title">SNAP / EBT (Food Stamps)</div><div class="section-subtitle"><e>Approved — EBT card not yet received</e></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">Card Pending</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="status-block amber"><strong>Status:</strong><span class="editable" contenteditable="false" onblur="saveEditable(this)"> Approved for SNAP. EBT card has not arrived. Follow up to request replacement or confirm mailing address on file.</span></div>
+      <div class="status-block amber"><strong>Status:</strong> <e>Approved for SNAP. EBT card has not arrived. Follow up to request replacement or confirm mailing address on file.</e></div>
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">SNAP / EBT State Hotline</span></div>
-        <div class="contact-label">Phone (card issues)</div><div class="contact-row">&#128222; <a href="tel:8886227328">888-622-7328</a></div>
+        <div class="contact-name"><e>SNAP / EBT State Hotline</e></div>
+        <div class="contact-label">Phone (card issues)</div><div class="contact-row">&#128222; <a href="tel:8886227328"><e>888-622-7328</e></a></div>
       </div></div>
       <div class="subsection" id="subsec-log-snap">
-      <div class="subsection-header" onclick="toggleSub('log-snap')">
-        <span class="subsection-title">&#128203; Contact Log</span>
-        <span class="subsection-toggle">&#9660;</span>
+        <div class="subsection-header" onclick="toggleSub('log-snap')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="log-widget-snap"></div></div>
       </div>
-      <div class="subsection-body">
-        <div id="log-widget-snap"></div>
-      </div></div>
-      <div class="notes-label">Notes</span>
+      <div class="notes-toggle" id="notes-toggle-snap" onclick="toggleNotes('snap')">
+        <span class="notes-toggle-label">Notes</span>
         <div class="notes-toggle-right"><span class="notes-save" id="save-snap">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
       </div>
       <div class="notes-collapse" id="notes-collapse-snap">
         <textarea class="notes-area" id="notes-snap" placeholder="Date card was expected, mailing address, reference numbers..." oninput="saveNote('snap')" rows="3"></textarea>
       </div>
-      <div class="notes-toggle" id="notes-toggle-medicaid" onclick="toggleNotes('medicaid')">
-        <span class="notes-toggle-label">Documents</div><div id="docs-snap"></div>
-      <div class="subsection" id="subsec-actions-snap">
-      <div class="subsection-header" onclick="toggleSub('actions-snap')">
-        <span class="subsection-title">&#9989; Action Items</span>
-        <span class="subsection-toggle">&#9660;</span>
+      <div class="subsection" id="subsec-docs-snap">
+        <div class="subsection-header" onclick="toggleSub('docs-snap')"><span class="subsection-title">&#128196; Documents</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="docs-snap"></div></div>
       </div>
-      <div class="subsection-body">
-        <ul class="action-list" id="actions-snap"></ul>
-        <div class="add-action-row">
-          <input class="add-action-input" id="input-snap" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('snap')">
-          <button class="add-btn" onclick="addAction('snap')">+ Add</button>
+      <div class="subsection" id="subsec-actions-snap">
+        <div class="subsection-header" onclick="toggleSub('actions-snap')"><span class="subsection-title">&#9989; Action Items</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <ul class="action-list" id="actions-snap"></ul>
+          <div class="add-action-row">
+            <input class="add-action-input" id="input-snap" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('snap')">
+            <button class="add-btn" onclick="addAction('snap')">+ Add</button>
+          </div>
         </div>
-      </div></div>
+      </div>
     </div>
   </div>
 
+  <!-- MEDICAID -->
   <div class="section open" id="sec-medicaid">
     <div class="section-header" onclick="toggle('sec-medicaid')">
       <div class="section-title-row"><div class="section-icon icon-rose">&#127973;</div>
-        <div><div class="section-title">Medicaid</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Partially denied — awaiting more information</span></div></div>
+        <div><div class="section-title">Medicaid</div><div class="section-subtitle"><e>Partially denied — awaiting more information</e></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-rose">Status Unclear</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="status-block rose"><strong>Status:</strong><span class="editable" contenteditable="false" onblur="saveEditable(this)"> Denied for most aspects of Medicaid. Agency has also requested additional information. Needs follow-up to clarify what documentation is required and which aspects remain open.</span></div>
+      <div class="status-block rose"><strong>Status:</strong> <e>Denied for most aspects of Medicaid. Agency has also requested additional information. Needs follow-up to clarify what documentation is required and which aspects remain open.</e></div>
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Charles Newsome</span></div>
-        <div class="contact-label">Email</div><div class="contact-row">&#9993;&#65039; <a href="mailto:charles.newson@mecklenburgcountync.gov">charles.newson@mecklenburgcountync.gov</a></div>
-        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9803146437">980-314-6437</a></div>
+        <div class="contact-name"><e>Charles Newsome</e></div>
+        <div class="contact-label">Email</div><div class="contact-row">&#9993; <a href="mailto:charles.newson@mecklenburgcountync.gov"><e>charles.newson@mecklenburgcountync.gov</e></a></div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9803146437"><e>980-314-6437</e></a></div>
       </div></div>
       <div class="subsection" id="subsec-log-medicaid">
-      <div class="subsection-header" onclick="toggleSub('log-medicaid')">
-        <span class="subsection-title">&#128203; Contact Log</span>
-        <span class="subsection-toggle">&#9660;</span>
+        <div class="subsection-header" onclick="toggleSub('log-medicaid')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="log-widget-medicaid"></div></div>
       </div>
-      <div class="subsection-body">
-        <div id="log-widget-medicaid"></div>
-      </div></div>
-      <div class="notes-label">Notes</span>
+      <div class="notes-toggle" id="notes-toggle-medicaid" onclick="toggleNotes('medicaid')">
+        <span class="notes-toggle-label">Notes</span>
         <div class="notes-toggle-right"><span class="notes-save" id="save-medicaid">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
       </div>
       <div class="notes-collapse" id="notes-collapse-medicaid">
         <textarea class="notes-area" id="notes-medicaid" placeholder="What aspects were denied? What info did they request? Deadlines..." oninput="saveNote('medicaid')" rows="3"></textarea>
       </div>
-      <div class="notes-toggle" id="notes-toggle-medical" onclick="toggleNotes('medical')">
-        <span class="notes-toggle-label">Documents</div><div id="docs-medicaid"></div>
-      <div class="subsection" id="subsec-actions-medicaid">
-      <div class="subsection-header" onclick="toggleSub('actions-medicaid')">
-        <span class="subsection-title">&#9989; Action Items</span>
-        <span class="subsection-toggle">&#9660;</span>
+      <div class="subsection" id="subsec-docs-medicaid">
+        <div class="subsection-header" onclick="toggleSub('docs-medicaid')"><span class="subsection-title">&#128196; Documents</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="docs-medicaid"></div></div>
       </div>
-      <div class="subsection-body">
-        <ul class="action-list" id="actions-medicaid"></ul>
-        <div class="add-action-row">
-          <input class="add-action-input" id="input-medicaid" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('medicaid')">
-          <button class="add-btn" onclick="addAction('medicaid')">+ Add</button>
+      <div class="subsection" id="subsec-actions-medicaid">
+        <div class="subsection-header" onclick="toggleSub('actions-medicaid')"><span class="subsection-title">&#9989; Action Items</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <ul class="action-list" id="actions-medicaid"></ul>
+          <div class="add-action-row">
+            <input class="add-action-input" id="input-medicaid" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('medicaid')">
+            <button class="add-btn" onclick="addAction('medicaid')">+ Add</button>
+          </div>
         </div>
-      </div></div>
+      </div>
     </div>
   </div>
 
+  <!-- MEDICAL -->
   <div class="section open" id="sec-medical">
     <div class="section-header" onclick="toggle('sec-medical')">
       <div class="section-title-row"><div class="section-icon icon-blue">&#128138;</div>
-        <div><div class="section-title">Medical &amp; Healthcare</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Doctors, medications, appointments</span></div></div>
+        <div><div class="section-title">Medical &amp; Healthcare</div><div class="section-subtitle"><e>Doctors, medications, appointments</e></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-blue">Appt Tomorrow</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="provider-label"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Neuropsychology — Carolinas Rehab Hospital</span></div>
+      <div class="provider-label"><e>Neuropsychology — Carolinas Rehab Hospital</e></div>
       <div class="contacts-grid">
         <div class="contact-card">
-          <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Dept. of Neuropsychological Services</span></div>
-          <div class="contact-label">Neurologist</div><div class="contact-row">&#128104;&#8205;&#9877;<span class="editable" contenteditable="false" onblur="saveEditable(this)">&#65039; Dr. Ablitz</span></div>
-          <div class="contact-label">Address</div><div class="contact-row">&#128205; <span class="editable" contenteditable="false" onblur="saveEditable(this)">1100 Blythe Blvd, Charlotte</span></div>
-          <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7043557328">704-355-7328</a></div>
-          <div class="contact-label">Parking</div><div class="contact-row">&#127359; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Orange Parking Lot &middot; Code: 61853#</span></div>
-          <div class="contact-label">Floor</div><div class="contact-row">&#127970; <span class="editable" contenteditable="false" onblur="saveEditable(this)">2nd Floor</span></div>
+          <div class="contact-name"><e>Dept. of Neuropsychological Services</e></div>
+          <div class="contact-label">Neurologist</div><div class="contact-row">&#128104;&#8205;&#9877; <e>Dr. Ablitz</e></div>
+          <div class="contact-label">Address</div><div class="contact-row">&#128205; <e>1100 Blythe Blvd, Charlotte</e></div>
+          <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7043557328"><e>704-355-7328</e></a></div>
+          <div class="contact-label">Parking</div><div class="contact-row">&#127359; <e>Orange Parking Lot &middot; Code: 61853#</e></div>
+          <div class="contact-label">Floor</div><div class="contact-row">&#127970; <e>2nd Floor</e></div>
         </div>
         <div class="contact-card">
-          <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Appointments</span></div>
-          <div class="contact-label">Neurological Work-Up</div><div class="contact-row">&#128197; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Completed — April 16, 2026</span></div>
+          <div class="contact-name">Appointments</div>
+          <div class="contact-label">Neurological Work-Up</div><div class="contact-row">&#128197; <e>Completed — April 16, 2026</e></div>
           <div class="contact-label" style="margin-top:8px;">Follow-Up (Virtual)</div>
-          <div class="contact-row" style="color:var(--rose);font-weight:600;">&#128197; April 28, 2026 — 11:00 AM</div>
+          <div class="contact-row" style="color:var(--rose);font-weight:600;">&#128197; <e>April 28, 2026 — 11:00 AM</e></div>
         </div>
       </div>
       <div class="divider"></div>
-
-      <div class="provider-label"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Primary Care</span></div>
-      <div class="contacts-grid">
-        <div class="contact-card">
-          <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Lawrence Moffat, MD</span></div>
-          <div class="contact-label">Practice</div><div class="contact-row">&#127968; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Mecklenburg Medical Group</span></div>
-          <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7043555100">704-355-5100</a></div>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="provider-label"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Possible New Primary Care</span></div>
-      <div class="contacts-grid">
-        <div class="contact-card">
-          <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Carolina Family Healthcare</span></div>
-          <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7048474000">704-847-4000</a></div>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="provider-label"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Possible Sleep Doctor</span></div>
-      <div class="contacts-grid">
-        <div class="contact-card">
-          <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Ballantyne Sleep Diagnostic</span></div>
-          <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7049435075">704-943-5075</a></div>
-        </div>
-      </div>
-
-      <div class="divider"></div>
-
-      <div class="subsection" id="subsec-log-medical">
-      <div class="subsection-header" onclick="toggleSub('log-medical')">
-        <span class="subsection-title">&#128203; Contact Log</span>
-        <span class="subsection-toggle">&#9660;</span>
-      </div>
-      <div class="subsection-body">
-        <div id="log-widget-medical"></div>
+      <div class="provider-label"><e>Primary Care</e></div>
+      <div class="contacts-grid"><div class="contact-card">
+        <div class="contact-name"><e>Lawrence Moffat, MD</e></div>
+        <div class="contact-label">Practice</div><div class="contact-row">&#127968; <e>Mecklenburg Medical Group</e></div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7043555100"><e>704-355-5100</e></a></div>
       </div></div>
-      <div class="notes-label">Notes</span>
+      <div class="divider"></div>
+      <div class="provider-label"><e>Possible New Primary Care</e></div>
+      <div class="contacts-grid"><div class="contact-card">
+        <div class="contact-name"><e>Carolina Family Healthcare</e></div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7048474000"><e>704-847-4000</e></a></div>
+      </div></div>
+      <div class="divider"></div>
+      <div class="provider-label"><e>Possible Sleep Doctor</e></div>
+      <div class="contacts-grid"><div class="contact-card">
+        <div class="contact-name"><e>Ballantyne Sleep Diagnostic</e></div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7049435075"><e>704-943-5075</e></a></div>
+      </div></div>
+      <div class="divider"></div>
+      <div class="subsection" id="subsec-log-medical">
+        <div class="subsection-header" onclick="toggleSub('log-medical')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="log-widget-medical"></div></div>
+      </div>
+      <div class="notes-toggle" id="notes-toggle-medical" onclick="toggleNotes('medical')">
+        <span class="notes-toggle-label">Notes</span>
         <div class="notes-toggle-right"><span class="notes-save" id="save-medical">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
       </div>
       <div class="notes-collapse" id="notes-collapse-medical">
         <textarea class="notes-area" id="notes-medical" placeholder="Primary doctor, medications, allergies, insurance cards, other specialists..." oninput="saveNote('medical')" rows="4"></textarea>
       </div>
-      <div class="notes-toggle" id="notes-toggle-therapy" onclick="toggleNotes('therapy')">
-        <span class="notes-toggle-label">Documents</div><div id="docs-medical"></div>
-      <div class="subsection" id="subsec-actions-medical">
-      <div class="subsection-header" onclick="toggleSub('actions-medical')">
-        <span class="subsection-title">&#9989; Action Items</span>
-        <span class="subsection-toggle">&#9660;</span>
+      <div class="subsection" id="subsec-docs-medical">
+        <div class="subsection-header" onclick="toggleSub('docs-medical')"><span class="subsection-title">&#128196; Documents</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="docs-medical"></div></div>
       </div>
-      <div class="subsection-body">
-        <ul class="action-list" id="actions-medical"></ul>
-        <div class="add-action-row">
-          <input class="add-action-input" id="input-medical" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('medical')">
-          <button class="add-btn" onclick="addAction('medical')">+ Add</button>
+      <div class="subsection" id="subsec-actions-medical">
+        <div class="subsection-header" onclick="toggleSub('actions-medical')"><span class="subsection-title">&#9989; Action Items</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <ul class="action-list" id="actions-medical"></ul>
+          <div class="add-action-row">
+            <input class="add-action-input" id="input-medical" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('medical')">
+            <button class="add-btn" onclick="addAction('medical')">+ Add</button>
+          </div>
         </div>
-      </div></div>
+      </div>
     </div>
   </div>
 
+  <!-- THERAPY -->
   <div class="section open" id="sec-therapy">
     <div class="section-header" onclick="toggle('sec-therapy')">
       <div class="section-title-row"><div class="section-icon icon-purple">&#129504;</div>
-        <div><div class="section-title">Therapy &amp; Peer Support</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Potential providers — outreach in progress</span></div></div>
+        <div><div class="section-title">Therapy &amp; Peer Support</div><div class="section-subtitle"><e>Potential providers — outreach in progress</e></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">In Progress</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="subsection" id="subsec-pcs">
-      <div class="subsection-header" onclick="toggleSub('pcs')">
-        <span class="subsection-title">Primary Care Solutions</span>
-        <span class="subsection-toggle">&#9660;</span>
+
+      <div class="subsection open" id="subsec-pcs">
+        <div class="subsection-header" onclick="toggleSub('pcs')"><span class="subsection-title"><e>Primary Care Solutions</e></span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <div class="contacts-grid"><div class="contact-card">
+            <div class="contact-name"><e>Primary Care Solutions</e></div>
+            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045371022"><e>+1 (704) 537-1022</e></a></div>
+            <div class="contact-label">Needs from us</div><div class="contact-row">&#128203; <e>Name, DOB &amp; Medicare #</e></div>
+          </div></div>
+          <div class="subsection" id="subsec-log-pcs">
+            <div class="subsection-header" onclick="toggleSub('log-pcs')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
+            <div class="subsection-body"><div id="log-widget-pcs"></div></div>
+          </div>
+        </div>
       </div>
-      <div class="subsection-body">
-      <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Primary Care Solutions</span></div>
-        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045371022">+1 (704) 537-1022</a></div>
-        <div class="contact-label">Needs from us</div><div class="contact-row">&#128203; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Name, DOB &amp; Medicare #</span></div>
-      </div></div>
-      <div id="log-widget-pcs"></div>
-      </div></div>
-      <div class="divider"></div>
-      <div class="subsection" id="subsec-monarch">
-      <div class="subsection-header" onclick="toggleSub('monarch')">
-        <span class="subsection-title">Monarch</span>
-        <span class="subsection-toggle">&#9660;</span>
+
+      <div class="subsection open" id="subsec-monarch">
+        <div class="subsection-header" onclick="toggleSub('monarch')"><span class="subsection-title"><e>Monarch</e></span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <div class="contacts-grid"><div class="contact-card">
+            <div class="contact-name"><e>Monarch</e></div>
+            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8662727826"><e>866-272-7826</e></a></div>
+            <div class="contact-label">Walk-In Hours</div><div class="contact-row">&#128694; <e>8–10 AM or 1–2 PM</e></div>
+            <div class="contact-label">Video Call</div><div class="contact-row">&#128187; <e>8 AM–2 PM &middot; Call in &middot; First come, first served</e></div>
+            <div class="contact-label">Availability</div>
+            <div class="contact-row">&#9989; <e>Peer Support available</e></div>
+            <div class="contact-row" style="color:var(--rose);">&#9888; <e>CST currently at capacity</e></div>
+          </div></div>
+          <div class="subsection" id="subsec-log-monarch">
+            <div class="subsection-header" onclick="toggleSub('log-monarch')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
+            <div class="subsection-body"><div id="log-widget-monarch"></div></div>
+          </div>
+        </div>
       </div>
-      <div class="subsection-body">
-      <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Monarch</span></div>
-        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8662727826">866-272-7826</a></div>
-        <div class="contact-label">Walk-In Hours</div><div class="contact-row">&#128694; <span class="editable" contenteditable="false" onblur="saveEditable(this)">8–10 AM or 1–2 PM</span></div>
-        <div class="contact-label">Video Call</div><div class="contact-row">&#128187; <span class="editable" contenteditable="false" onblur="saveEditable(this)">8 AM–2 PM &middot; Call in &middot; First come, first served</span></div>
-        <div class="contact-label">Availability</div>
-        <div class="contact-row">&#9989; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Peer Support available</span></div>
-        <div class="contact-row" style="color:var(--rose);">&#9888;&#65039; CST currently at capacity</div>
-      </div></div>
-      <div id="log-widget-monarch"></div>
-      </div></div>
-      <div class="divider"></div>
-      <div class="subsection" id="subsec-genesis">
-      <div class="subsection-header" onclick="toggleSub('genesis')">
-        <span class="subsection-title">Genesis Project 1, Inc.</span>
-        <span class="subsection-toggle">&#9660;</span>
+
+      <div class="subsection open" id="subsec-genesis">
+        <div class="subsection-header" onclick="toggleSub('genesis')"><span class="subsection-title"><e>Genesis Project 1, Inc.</e></span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <div class="contacts-grid"><div class="contact-card">
+            <div class="contact-name"><e>Genesis Project 1, Inc.</e></div>
+            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045960505"><e>+1 (704) 596-0505</e></a></div>
+          </div></div>
+          <div class="subsection" id="subsec-log-genesis">
+            <div class="subsection-header" onclick="toggleSub('log-genesis')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
+            <div class="subsection-body"><div id="log-widget-genesis"></div></div>
+          </div>
+        </div>
       </div>
-      <div class="subsection-body">
-      <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Genesis Project 1, Inc.</span></div>
-        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045960505">+1 (704) 596-0505</a></div>
-      </div></div>
-      <div id="log-widget-genesis"></div>
-      </div></div>
-      <div class="divider"></div>
-      <div class="subsection" id="subsec-carolina">
-      <div class="subsection-header" onclick="toggleSub('carolina')">
-        <span class="subsection-title">Carolina Outreach</span>
-        <span class="subsection-toggle">&#9660;</span>
+
+      <div class="subsection open" id="subsec-carolina">
+        <div class="subsection-header" onclick="toggleSub('carolina')"><span class="subsection-title"><e>Carolina Outreach</e></span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <div class="contacts-grid"><div class="contact-card">
+            <div class="contact-name"><e>Carolina Outreach</e></div>
+            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8448661166"><e>844-866-1166</e></a></div>
+            <div class="contact-label">Insurance</div><div class="contact-row">&#9989; <e>Accepts Medicare</e></div>
+          </div></div>
+          <div class="subsection" id="subsec-log-carolina">
+            <div class="subsection-header" onclick="toggleSub('log-carolina')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
+            <div class="subsection-body"><div id="log-widget-carolina"></div></div>
+          </div>
+        </div>
       </div>
-      <div class="subsection-body">
-      <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Carolina Outreach</span></div>
-        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8448661166">844-866-1166</a></div>
-        <div class="contact-label">Insurance</div><div class="contact-row">&#9989; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Accepts Medicare</span></div>
-      </div></div>
-      <div id="log-widget-carolina"></div>
-      </div></div>
-      <div class="divider"></div>
-      <div class="subsection" id="subsec-rha">
-      <div class="subsection-header" onclick="toggleSub('rha')">
-        <span class="subsection-title">RHA</span>
-        <span class="subsection-toggle">&#9660;</span>
+
+      <div class="subsection open" id="subsec-rha">
+        <div class="subsection-header" onclick="toggleSub('rha')"><span class="subsection-title"><e>RHA</e></span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <div class="contacts-grid"><div class="contact-card">
+            <div class="contact-name"><e>RHA</e></div>
+            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9195189293"><e>919-518-9293</e></a></div>
+            <div class="contact-label">Insurance</div><div class="contact-row">&#9989; <e>Accepts Medicare</e></div>
+          </div></div>
+          <div class="subsection" id="subsec-log-rha">
+            <div class="subsection-header" onclick="toggleSub('log-rha')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
+            <div class="subsection-body"><div id="log-widget-rha"></div></div>
+          </div>
+        </div>
       </div>
-      <div class="subsection-body">
-      <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">RHA</span></div>
-        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9195189293">919-518-9293</a></div>
-        <div class="contact-label">Insurance</div><div class="contact-row">&#9989; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Accepts Medicare</span></div>
-      </div></div>
-      <div id="log-widget-rha"></div>
-      </div></div>
-      <div class="divider"></div>
-      <div class="notes-label">Overall Notes</span>
+
+      <div class="notes-toggle" id="notes-toggle-therapy" onclick="toggleNotes('therapy')">
+        <span class="notes-toggle-label">Overall Notes</span>
         <div class="notes-toggle-right"><span class="notes-save" id="save-therapy">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
       </div>
       <div class="notes-collapse" id="notes-collapse-therapy">
         <textarea class="notes-area" id="notes-therapy" placeholder="Overall notes on therapy search, preferences, what Dad is open to..." oninput="saveNote('therapy')" rows="3"></textarea>
       </div>
-      <div class="notes-toggle" id="notes-toggle-authority" onclick="toggleNotes('authority')">
-        <span class="notes-toggle-label">Documents</div><div id="docs-therapy"></div>
-      <div class="subsection" id="subsec-actions-therapy">
-      <div class="subsection-header" onclick="toggleSub('actions-therapy')">
-        <span class="subsection-title">&#9989; Action Items</span>
-        <span class="subsection-toggle">&#9660;</span>
+      <div class="subsection" id="subsec-docs-therapy">
+        <div class="subsection-header" onclick="toggleSub('docs-therapy')"><span class="subsection-title">&#128196; Documents</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="docs-therapy"></div></div>
       </div>
-      <div class="subsection-body">
-        <ul class="action-list" id="actions-therapy"></ul>
-        <div class="add-action-row">
-          <input class="add-action-input" id="input-therapy" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('therapy')">
-          <button class="add-btn" onclick="addAction('therapy')">+ Add</button>
+      <div class="subsection" id="subsec-actions-therapy">
+        <div class="subsection-header" onclick="toggleSub('actions-therapy')"><span class="subsection-title">&#9989; Action Items</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <ul class="action-list" id="actions-therapy"></ul>
+          <div class="add-action-row">
+            <input class="add-action-input" id="input-therapy" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('therapy')">
+            <button class="add-btn" onclick="addAction('therapy')">+ Add</button>
+          </div>
         </div>
-      </div></div>
+      </div>
     </div>
   </div>
 
+  <!-- CARE AUTHORITY -->
   <div class="section open" id="sec-authority">
     <div class="section-header" onclick="toggle('sec-authority')">
-      <div class="section-title-row"><div class="section-icon icon-purple">&#9878;&#65039;</div>
-        <div><div class="section-title">Care Authority</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">POAs, Advanced Directive &amp; legal documents</span></div></div>
+      <div class="section-title-row"><div class="section-icon icon-purple">&#9878;</div>
+        <div><div class="section-title">Care Authority</div><div class="section-subtitle"><e>POAs, Advanced Directive &amp; legal documents</e></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">In Progress</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="provider-label"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Medical POA &amp; Advanced Directive</span></div>
-      <div class="status-block amber"><strong>Status:</strong><span class="editable" contenteditable="false" onblur="saveEditable(this)"> Form in hand. Requires either an updated ID (ordered) or a credible witness for the notary before it can be executed.</span></div>
-      <div class="provider-label"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Financial / Durable POA</span></div>
-      <div class="status-block amber"><strong>Status:</strong><span class="editable" contenteditable="false" onblur="saveEditable(this)"> Will need to go through an attorney.</span></div>
+      <div class="provider-label"><e>Medical POA &amp; Advanced Directive</e></div>
+      <div class="status-block amber"><strong>Status:</strong> <e>Form in hand. Requires either an updated ID (ordered) or a credible witness for the notary before it can be executed.</e></div>
+      <div class="provider-label"><e>Financial / Durable POA</e></div>
+      <div class="status-block amber"><strong>Status:</strong> <e>Will need to go through an attorney.</e></div>
       <div class="subsection" id="subsec-log-authority">
-      <div class="subsection-header" onclick="toggleSub('log-authority')">
-        <span class="subsection-title">&#128203; Log</span>
-        <span class="subsection-toggle">&#9660;</span>
+        <div class="subsection-header" onclick="toggleSub('log-authority')"><span class="subsection-title">&#128203; Log</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="log-widget-authority"></div></div>
       </div>
-      <div class="subsection-body">
-        <div id="log-widget-authority"></div>
-      </div></div>
-      <div class="notes-label">Notes</span>
+      <div class="notes-toggle" id="notes-toggle-authority" onclick="toggleNotes('authority')">
+        <span class="notes-toggle-label">Notes</span>
         <div class="notes-toggle-right"><span class="notes-save" id="save-authority">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
       </div>
       <div class="notes-collapse" id="notes-collapse-authority">
         <textarea class="notes-area" id="notes-authority" placeholder="Attorney contacts, notary info, witness details, document locations..." oninput="saveNote('authority')" rows="3"></textarea>
       </div>
-      <div class="notes-toggle" id="notes-toggle-housing" onclick="toggleNotes('housing')">
-        <span class="notes-toggle-label">Documents</div><div id="docs-authority"></div>
-      <div class="subsection" id="subsec-actions-authority">
-      <div class="subsection-header" onclick="toggleSub('actions-authority')">
-        <span class="subsection-title">&#9989; Action Items</span>
-        <span class="subsection-toggle">&#9660;</span>
+      <div class="subsection" id="subsec-docs-authority">
+        <div class="subsection-header" onclick="toggleSub('docs-authority')"><span class="subsection-title">&#128196; Documents</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="docs-authority"></div></div>
       </div>
-      <div class="subsection-body">
-        <ul class="action-list" id="actions-authority"></ul>
-        <div class="add-action-row">
-          <input class="add-action-input" id="input-authority" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('authority')">
-          <button class="add-btn" onclick="addAction('authority')">+ Add</button>
+      <div class="subsection" id="subsec-actions-authority">
+        <div class="subsection-header" onclick="toggleSub('actions-authority')"><span class="subsection-title">&#9989; Action Items</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <ul class="action-list" id="actions-authority"></ul>
+          <div class="add-action-row">
+            <input class="add-action-input" id="input-authority" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('authority')">
+            <button class="add-btn" onclick="addAction('authority')">+ Add</button>
+          </div>
         </div>
-      </div></div>
+      </div>
     </div>
   </div>
 
+  <!-- HOUSING -->
   <div class="section" id="sec-housing">
     <div class="section-header" onclick="toggle('sec-housing')">
       <div class="section-title-row"><div class="section-icon icon-sage">&#127968;</div>
-        <div><div class="section-title">Housing &amp; Daily Living</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Home care, utilities, transportation</span></div></div>
+        <div><div class="section-title">Housing &amp; Daily Living</div><div class="section-subtitle"><e>Home care, utilities, transportation</e></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
       <div class="subsection" id="subsec-log-housing">
-      <div class="subsection-header" onclick="toggleSub('log-housing')">
-        <span class="subsection-title">&#128203; Log</span>
-        <span class="subsection-toggle">&#9660;</span>
+        <div class="subsection-header" onclick="toggleSub('log-housing')"><span class="subsection-title">&#128203; Log</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="log-widget-housing"></div></div>
       </div>
-      <div class="subsection-body">
-        <div id="log-widget-housing"></div>
-      </div></div>
-      <div class="notes-label">Notes</span>
+      <div class="notes-toggle" id="notes-toggle-housing" onclick="toggleNotes('housing')">
+        <span class="notes-toggle-label">Notes</span>
         <div class="notes-toggle-right"><span class="notes-save" id="save-housing">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
       </div>
       <div class="notes-collapse" id="notes-collapse-housing">
         <textarea class="notes-area" id="notes-housing" placeholder="Living situation, home care aides, transportation needs, utility assistance..." oninput="saveNote('housing')" rows="4"></textarea>
       </div>
-      <div class="notes-toggle" id="notes-toggle-financial" onclick="toggleNotes('financial')">
-        <span class="notes-toggle-label">Documents</div><div id="docs-housing"></div>
-      <div class="subsection" id="subsec-actions-housing">
-      <div class="subsection-header" onclick="toggleSub('actions-housing')">
-        <span class="subsection-title">&#9989; Action Items</span>
-        <span class="subsection-toggle">&#9660;</span>
+      <div class="subsection" id="subsec-docs-housing">
+        <div class="subsection-header" onclick="toggleSub('docs-housing')"><span class="subsection-title">&#128196; Documents</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="docs-housing"></div></div>
       </div>
-      <div class="subsection-body">
-        <ul class="action-list" id="actions-housing"></ul>
-        <div class="add-action-row">
-          <input class="add-action-input" id="input-housing" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('housing')">
-          <button class="add-btn" onclick="addAction('housing')">+ Add</button>
+      <div class="subsection" id="subsec-actions-housing">
+        <div class="subsection-header" onclick="toggleSub('actions-housing')"><span class="subsection-title">&#9989; Action Items</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <ul class="action-list" id="actions-housing"></ul>
+          <div class="add-action-row">
+            <input class="add-action-input" id="input-housing" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('housing')">
+            <button class="add-btn" onclick="addAction('housing')">+ Add</button>
+          </div>
         </div>
-      </div></div>
+      </div>
     </div>
   </div>
 
+  <!-- FINANCIAL -->
   <div class="section" id="sec-financial">
     <div class="section-header" onclick="toggle('sec-financial')">
       <div class="section-title-row"><div class="section-icon icon-amber">&#128176;</div>
-        <div><div class="section-title">Financial &amp; Other Benefits</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">SSI, Social Security, other assistance</span></div></div>
+        <div><div class="section-title">Financial &amp; Other Benefits</div><div class="section-subtitle"><e>SSI, Social Security, other assistance</e></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
       <div class="subsection" id="subsec-log-financial">
-      <div class="subsection-header" onclick="toggleSub('log-financial')">
-        <span class="subsection-title">&#128203; Log</span>
-        <span class="subsection-toggle">&#9660;</span>
+        <div class="subsection-header" onclick="toggleSub('log-financial')"><span class="subsection-title">&#128203; Log</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="log-widget-financial"></div></div>
       </div>
-      <div class="subsection-body">
-        <div id="log-widget-financial"></div>
-      </div></div>
-      <div class="notes-label">Notes</span>
+      <div class="notes-toggle" id="notes-toggle-financial" onclick="toggleNotes('financial')">
+        <span class="notes-toggle-label">Notes</span>
         <div class="notes-toggle-right"><span class="notes-save" id="save-financial">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
       </div>
       <div class="notes-collapse" id="notes-collapse-financial">
         <textarea class="notes-area" id="notes-financial" placeholder="SSI/SSDI status, Social Security income, bills, other benefit programs..." oninput="saveNote('financial')" rows="4"></textarea>
       </div>
-      <div class="notes-toggle" id="notes-toggle-emergency" onclick="toggleNotes('emergency')">
-        <span class="notes-toggle-label">Documents</div><div id="docs-financial"></div>
-      <div class="subsection" id="subsec-actions-financial">
-      <div class="subsection-header" onclick="toggleSub('actions-financial')">
-        <span class="subsection-title">&#9989; Action Items</span>
-        <span class="subsection-toggle">&#9660;</span>
+      <div class="subsection" id="subsec-docs-financial">
+        <div class="subsection-header" onclick="toggleSub('docs-financial')"><span class="subsection-title">&#128196; Documents</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="docs-financial"></div></div>
       </div>
-      <div class="subsection-body">
-        <ul class="action-list" id="actions-financial"></ul>
-        <div class="add-action-row">
-          <input class="add-action-input" id="input-financial" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('financial')">
-          <button class="add-btn" onclick="addAction('financial')">+ Add</button>
+      <div class="subsection" id="subsec-actions-financial">
+        <div class="subsection-header" onclick="toggleSub('actions-financial')"><span class="subsection-title">&#9989; Action Items</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <ul class="action-list" id="actions-financial"></ul>
+          <div class="add-action-row">
+            <input class="add-action-input" id="input-financial" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('financial')">
+            <button class="add-btn" onclick="addAction('financial')">+ Add</button>
+          </div>
         </div>
-      </div></div>
+      </div>
     </div>
   </div>
 
+  <!-- EMERGENCY -->
   <div class="section" id="sec-emergency">
     <div class="section-header" onclick="toggle('sec-emergency')">
       <div class="section-title-row"><div class="section-icon icon-rose">&#128680;</div>
-        <div><div class="section-title">Emergency Info &amp; General Notes</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Key info in case of emergency</span></div></div>
+        <div><div class="section-title">Emergency Info &amp; General Notes</div><div class="section-subtitle"><e>Key info in case of emergency</e></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
       <div class="subsection" id="subsec-log-emergency">
-      <div class="subsection-header" onclick="toggleSub('log-emergency')">
-        <span class="subsection-title">&#128203; Log</span>
-        <span class="subsection-toggle">&#9660;</span>
+        <div class="subsection-header" onclick="toggleSub('log-emergency')"><span class="subsection-title">&#128203; Log</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="log-widget-emergency"></div></div>
       </div>
-      <div class="subsection-body">
-        <div id="log-widget-emergency"></div>
-      </div></div>
-      <div class="notes-label">Notes</span>
+      <div class="notes-toggle" id="notes-toggle-emergency" onclick="toggleNotes('emergency')">
+        <span class="notes-toggle-label">Notes</span>
         <div class="notes-toggle-right"><span class="notes-save" id="save-emergency">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
       </div>
       <div class="notes-collapse" id="notes-collapse-emergency">
         <textarea class="notes-area" id="notes-emergency" placeholder="Emergency contacts, hospital preference, advance directives, POA info, document locations..." oninput="saveNote('emergency')" rows="4"></textarea>
       </div>
       <div class="subsection" id="subsec-docs-emergency">
-      <div class="subsection-header" onclick="toggleSub('docs-emergency')">
-        <span class="subsection-title">&#128196; Documents</span>
-        <span class="subsection-toggle">&#9660;</span>
+        <div class="subsection-header" onclick="toggleSub('docs-emergency')"><span class="subsection-title">&#128196; Documents</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body"><div id="docs-emergency"></div></div>
       </div>
-      <div class="subsection-body">
-        <div id="docs-emergency"></div>
-      </div></div>
       <div class="subsection" id="subsec-actions-emergency">
-      <div class="subsection-header" onclick="toggleSub('actions-emergency')">
-        <span class="subsection-title">&#9989; Action Items</span>
-        <span class="subsection-toggle">&#9660;</span>
-      </div>
-      <div class="subsection-body">
-        <ul class="action-list" id="actions-emergency"></ul>
-        <div class="add-action-row">
-          <input class="add-action-input" id="input-emergency" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('emergency')">
-          <button class="add-btn" onclick="addAction('emergency')">+ Add</button>
+        <div class="subsection-header" onclick="toggleSub('actions-emergency')"><span class="subsection-title">&#9989; Action Items</span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-body">
+          <ul class="action-list" id="actions-emergency"></ul>
+          <div class="add-action-row">
+            <input class="add-action-input" id="input-emergency" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('emergency')">
+            <button class="add-btn" onclick="addAction('emergency')">+ Add</button>
+          </div>
         </div>
-      </div></div>
+      </div>
     </div>
   </div>
+
 </div>
 
 <script type="module">
@@ -841,7 +830,7 @@ const db = getFirestore(app);
 const CORRECT_PASSWORD = 'BuddyBoy120689!';
 const DOC_REF = doc(db, 'dashboard', 'main');
 
-// Auth
+// ── Auth ──────────────────────────────────────────────────────
 window.toggleAuthVis = function() {
   const i = document.getElementById('authInput');
   i.type = i.type === 'password' ? 'text' : 'password';
@@ -859,20 +848,25 @@ window.authSubmit = function() {
   }
 };
 
-// Banner
+// ── Banner ────────────────────────────────────────────────────
 function showBanner(msg, isError) {
   const b = document.getElementById('syncBanner');
-  b.textContent = msg; b.className = 'sync-banner show' + (isError ? ' error' : '');
+  b.textContent = msg;
+  b.className = 'sync-banner show' + (isError ? ' error' : '');
   setTimeout(() => b.className = 'sync-banner', 2500);
 }
 
-// State
+// ── State ─────────────────────────────────────────────────────
 let state = { notes:{}, actions:{}, logs:{}, appts:[], docs:{} };
 let saving = false, pendingSave = false;
 
 const noteSections = ['social','snap','medicaid','medical','therapy','authority','housing','financial','emergency'];
 const logKeys = ['social','snap','medicaid','medical','pcs','monarch','genesis','carolina','rha','authority','housing','financial','emergency'];
 const docSections = ['social','snap','medicaid','medical','therapy','authority','housing','financial','emergency'];
+const sectionLabels = {
+  social:'Social Worker',snap:'SNAP / EBT',medicaid:'Medicaid',medical:'Medical',
+  therapy:'Therapy',authority:'Care Authority',housing:'Housing',financial:'Financial',emergency:'Emergency'
+};
 const logTitles = {
   social:'Social Worker — Contact Log',snap:'SNAP / EBT — Contact Log',medicaid:'Medicaid — Contact Log',
   medical:'Medical — Contact Log',pcs:'Primary Care Solutions — Contact Log',monarch:'Monarch — Contact Log',
@@ -890,33 +884,7 @@ const seedAppts = [
   {date:'4/28/2026 · 11:00 AM',provider:'Dr. Ablitz — Neuropsychology',purpose:'Follow-up virtual visit',type:'virtual'}
 ];
 
-
-let editMode = false;
-window.toggleEditMode = function() {
-  editMode = !editMode;
-  document.body.classList.toggle('edit-mode', editMode);
-  const btn = document.getElementById('editModeBtn');
-  btn.classList.toggle('active', editMode);
-  btn.innerHTML = editMode ? '&#10003; Done Editing' : '&#9998; Edit Mode';
-  // Toggle contenteditable on all editable spans
-  document.querySelectorAll('.editable').forEach(el => {
-    el.contentEditable = editMode ? 'true' : 'false';
-  });
-  // Toggle contenteditable on appointment cells
-  document.querySelectorAll('.appt-edit-cell').forEach(el => {
-    el.contentEditable = editMode ? 'true' : 'false';
-  });
-  if(!editMode) saveToFirestore();
-};
-
-window.saveEditable = function(el) {
-  // Just triggers a save — actual data is read from DOM on save
-  if(editMode) saveToFirestore();
-};
-
-// Override saveToFirestore to also capture editable content
-const _origSave = saveToFirestore;
-
+// ── Save ──────────────────────────────────────────────────────
 async function saveToFirestore() {
   if (saving) { pendingSave = true; return; }
   saving = true;
@@ -926,23 +894,24 @@ async function saveToFirestore() {
   if (pendingSave) { pendingSave = false; saveToFirestore(); }
 }
 
+// ── Init ──────────────────────────────────────────────────────
 async function initApp() {
   showBanner('Loading your dashboard...');
   try {
     const snap = await getDoc(DOC_REF);
     if (snap.exists()) {
       const d = snap.data();
-      state.notes = d.notes||{}; state.actions = d.actions||{};
-      state.logs = d.logs||{}; state.appts = d.appts||seedAppts; state.docs = d.docs||{};
-      logKeys.forEach(k => { if (!state.logs[k] && seedLogs[k]) state.logs[k] = seedLogs[k]; });
+      state.notes=d.notes||{}; state.actions=d.actions||{};
+      state.logs=d.logs||{}; state.appts=d.appts||seedAppts; state.docs=d.docs||{};
+      logKeys.forEach(k => { if (!state.logs[k] && seedLogs[k]) state.logs[k]=seedLogs[k]; });
     } else {
-      logKeys.forEach(k => { if (seedLogs[k]) state.logs[k] = seedLogs[k]; });
+      logKeys.forEach(k => { if (seedLogs[k]) state.logs[k]=seedLogs[k]; });
       state.appts = seedAppts;
       await saveToFirestore();
     }
   } catch(e) {
     showBanner('Could not connect — working offline', true);
-    logKeys.forEach(k => { if (seedLogs[k]) state.logs[k] = seedLogs[k]; });
+    logKeys.forEach(k => { if (seedLogs[k]) state.logs[k]=seedLogs[k]; });
     state.appts = seedAppts;
   }
   renderAll();
@@ -957,249 +926,319 @@ async function initApp() {
 }
 
 function renderAll() {
-  noteSections.forEach(k => { const el=document.getElementById('notes-'+k); if(el&&state.notes[k]!==undefined) el.value=state.notes[k]; renderActions(k); });
+  noteSections.forEach(k => {
+    const el = document.getElementById('notes-'+k);
+    if (el && state.notes[k] !== undefined) el.value = state.notes[k];
+    renderActions(k);
+  });
   logKeys.forEach(k => renderLog(k));
   docSections.forEach(k => renderDocs(k));
   renderAppts();
   renderMasterTodo();
 }
 
+// ── Utils ─────────────────────────────────────────────────────
 function todayStr() { const d=new Date(); return (d.getMonth()+1)+'/'+d.getDate(); }
 function updateTimestamp() {
-  const now=new Date();
-  document.getElementById('lastUpdated').textContent='Last updated: '+now.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+  const now = new Date();
+  document.getElementById('lastUpdated').textContent =
+    'Last updated: ' + now.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
 }
+
+// ── Toggle ────────────────────────────────────────────────────
 window.toggle = id => document.getElementById(id).classList.toggle('open');
-window.expandAll = () => {
-  document.querySelectorAll('.section').forEach(s=>s.classList.add('open'));
-  document.querySelectorAll('.subsection').forEach(s=>s.classList.add('open'));
-  document.querySelectorAll('.notes-toggle').forEach(t=>t.classList.add('open'));
-  document.querySelectorAll('.notes-collapse').forEach(c=>c.classList.add('open'));
-};
 window.toggleSub = function(key) {
   const el = document.getElementById('subsec-'+key);
-  if(el) el.classList.toggle('open');
+  if (el) el.classList.toggle('open');
 };
 window.toggleNotes = function(key) {
-  const toggle = document.getElementById('notes-toggle-'+key);
-  const collapse = document.getElementById('notes-collapse-'+key);
-  if(toggle && collapse) {
-    toggle.classList.toggle('open');
-    collapse.classList.toggle('open');
-    if(collapse.classList.contains('open')) {
+  const t = document.getElementById('notes-toggle-'+key);
+  const c = document.getElementById('notes-collapse-'+key);
+  if (t && c) {
+    t.classList.toggle('open');
+    c.classList.toggle('open');
+    if (c.classList.contains('open')) {
       const ta = document.getElementById('notes-'+key);
-      if(ta) setTimeout(()=>ta.focus(),50);
+      if (ta) setTimeout(() => ta.focus(), 50);
     }
   }
 };
+window.expandAll = function() {
+  document.querySelectorAll('.section').forEach(s => s.classList.add('open'));
+  document.querySelectorAll('.subsection').forEach(s => s.classList.add('open'));
+  document.querySelectorAll('.notes-toggle').forEach(t => t.classList.add('open'));
+  document.querySelectorAll('.notes-collapse').forEach(c => c.classList.add('open'));
+};
 
+// ── Edit Mode ─────────────────────────────────────────────────
+let editMode = false;
+window.toggleEditMode = function() {
+  editMode = !editMode;
+  document.body.classList.toggle('edit-mode', editMode);
+  const btn = document.getElementById('editModeBtn');
+  btn.classList.toggle('active', editMode);
+  btn.innerHTML = editMode ? '&#10003; Done Editing' : '&#9998; Edit Mode';
+  document.querySelectorAll('e').forEach(el => {
+    el.contentEditable = editMode ? 'true' : 'false';
+  });
+  document.querySelectorAll('.appt-edit-cell').forEach(el => {
+    el.contentEditable = editMode ? 'true' : 'false';
+  });
+  if (!editMode) saveToFirestore();
+};
+
+// ── Notes ─────────────────────────────────────────────────────
 window.saveNote = function(key) {
-  if(!state.notes) state.notes={};
+  if (!state.notes) state.notes = {};
   const el = document.getElementById('notes-'+key);
-  if(el) state.notes[key]=el.value;
-  const ind=document.getElementById('save-'+key);
-  if(ind){ ind.classList.add('show'); setTimeout(()=>ind.classList.remove('show'),1500); }
+  if (el) state.notes[key] = el.value;
+  const ind = document.getElementById('save-'+key);
+  if (ind) { ind.classList.add('show'); setTimeout(() => ind.classList.remove('show'), 1500); }
   saveToFirestore();
 };
 
+// ── Actions ───────────────────────────────────────────────────
 window.addAction = function(key) {
-  const inp=document.getElementById('input-'+key); const text=inp.value.trim(); if(!text) return;
-  if(!state.actions[key]) state.actions[key]=[];
-  state.actions[key].push({text,done:false});
-  saveToFirestore(); renderActions(key); renderMasterTodo(); inp.value='';
+  const inp = document.getElementById('input-'+key);
+  const text = inp.value.trim(); if (!text) return;
+  if (!state.actions[key]) state.actions[key] = [];
+  state.actions[key].push({text, done:false});
+  saveToFirestore(); renderActions(key); renderMasterTodo(); inp.value = '';
 };
-function toggleAction(key,idx) { state.actions[key][idx].done=!state.actions[key][idx].done; saveToFirestore(); renderActions(key); renderMasterTodo(); }
-function renderActions(key) {
-  const ul=document.getElementById('actions-'+key); if(!ul) return; ul.innerHTML='';
-  (state.actions[key]||[]).forEach((item,i)=>{
-    const li=document.createElement('li');
-    const chk=document.createElement('div'); chk.className='action-check'+(item.done?' checked':''); chk.onclick=()=>toggleAction(key,i);
-    const sp=document.createElement('span'); sp.className='action-text'+(item.done?' done':''); sp.textContent=item.text;
-    const del=document.createElement('button'); del.className='action-del'; del.textContent='✕'; del.title='Delete'; del.onclick=()=>deleteAction(key,i);
-    li.appendChild(chk); li.appendChild(sp); li.appendChild(del); ul.appendChild(li);
-  });
-}
-function deleteAction(key,idx) {
-  state.actions[key].splice(idx,1);
+function toggleAction(key, idx) {
+  state.actions[key][idx].done = !state.actions[key][idx].done;
   saveToFirestore(); renderActions(key); renderMasterTodo();
 }
-
-window.addLogEntry = function(key) {
-  const dEl=document.getElementById('logdate-'+key); const tEl=document.getElementById('logtext-'+key);
-  const d=dEl.value.trim(),t=tEl.value.trim(); if(!t) return;
-  if(!state.logs[key]) state.logs[key]=[];
-  state.logs[key].push({date:d||todayStr(),text:t});
-  saveToFirestore(); renderLog(key); dEl.value=''; tEl.value='';
-};
-function deleteLogEntry(key,idx) { state.logs[key].splice(idx,1); saveToFirestore(); renderLog(key); }
-function renderLog(key) {
-  const container=document.getElementById('log-widget-'+key); if(!container) return; container.innerHTML='';
-  const widget=document.createElement('div'); widget.className='log-widget';
-  const title=document.createElement('div'); title.className='log-widget-title'; title.textContent=logTitles[key]||'Contact Log'; widget.appendChild(title);
-  const ul=document.createElement('ul'); ul.className='log-entries';
-  const entries=state.logs[key]||[];
-  if(!entries.length){ const e=document.createElement('li'); e.style.cssText='font-size:0.82rem;color:#bbb;padding:4px 0;'; e.textContent='No entries yet.'; ul.appendChild(e); }
-  entries.forEach((entry,i)=>{
-    const li=document.createElement('li'); li.className='log-entry';
-    const dateEl=document.createElement('span'); dateEl.className='log-date'; dateEl.contentEditable='true'; dateEl.textContent=entry.date;
-    dateEl.oninput=()=>{entry.date=dateEl.textContent.trim();saveToFirestore();};
-    const textEl=document.createElement('span'); textEl.className='log-text'; textEl.contentEditable='true'; textEl.textContent=entry.text;
-    textEl.oninput=()=>{entry.text=textEl.textContent.trim();saveToFirestore();};
-    const del=document.createElement('button'); del.className='log-delete'; del.textContent='✕'; del.onclick=()=>deleteLogEntry(key,i);
-    li.appendChild(dateEl); li.appendChild(textEl); li.appendChild(del); ul.appendChild(li);
+function deleteAction(key, idx) {
+  state.actions[key].splice(idx, 1);
+  saveToFirestore(); renderActions(key); renderMasterTodo();
+}
+function renderActions(key) {
+  const ul = document.getElementById('actions-'+key); if (!ul) return;
+  ul.innerHTML = '';
+  (state.actions[key]||[]).forEach((item, i) => {
+    const li = document.createElement('li');
+    const chk = document.createElement('div');
+    chk.className = 'action-check' + (item.done ? ' checked' : '');
+    chk.onclick = () => toggleAction(key, i);
+    const sp = document.createElement('span');
+    sp.className = 'action-text' + (item.done ? ' done' : '');
+    sp.textContent = item.text;
+    const del = document.createElement('button');
+    del.className = 'action-del'; del.textContent = '✕'; del.title = 'Delete';
+    del.onclick = () => deleteAction(key, i);
+    li.appendChild(chk); li.appendChild(sp); li.appendChild(del);
+    ul.appendChild(li);
   });
-  widget.appendChild(ul);
-  const addRow=document.createElement('div'); addRow.className='log-add-row';
-  const dInp=document.createElement('input'); dInp.className='log-date-input'; dInp.id='logdate-'+key; dInp.placeholder=todayStr();
-  dInp.onkeydown=e=>{if(e.key==='Enter') window.addLogEntry(key);};
-  const tInp=document.createElement('input'); tInp.className='log-text-input'; tInp.id='logtext-'+key; tInp.placeholder='Add log entry...';
-  tInp.onkeydown=e=>{if(e.key==='Enter') window.addLogEntry(key);};
-  const btn=document.createElement('button'); btn.className='log-add-btn'; btn.textContent='+ Log'; btn.onclick=()=>window.addLogEntry(key);
-  addRow.appendChild(dInp); addRow.appendChild(tInp); addRow.appendChild(btn); widget.appendChild(addRow); container.appendChild(widget);
 }
 
-window.addDoc = function(key) {
-  const lEl=document.getElementById('doclabel-'+key); const uEl=document.getElementById('docurl-'+key);
-  const label=lEl.value.trim(),url=uEl.value.trim(); if(!url) return;
-  if(!state.docs[key]) state.docs[key]=[];
-  state.docs[key].push({label:label||'Document',url});
-  saveToFirestore(); renderDocs(key); lEl.value=''; uEl.value='';
-};
-function deleteDoc(key,idx) { state.docs[key].splice(idx,1); saveToFirestore(); renderDocs(key); }
-function renderDocs(key) {
-  const container=document.getElementById('docs-'+key); if(!container) return; container.innerHTML='';
-  const docs=state.docs[key]||[];
-  if(docs.length){
-    const ul=document.createElement('ul'); ul.className='doc-list';
-    docs.forEach((d,i)=>{
-      const li=document.createElement('li'); li.className='doc-entry';
-      const icon=document.createElement('span'); icon.textContent='📄'; icon.style.fontSize='1rem';
-      const a=document.createElement('a'); a.className='doc-link'; a.href=d.url; a.target='_blank'; a.rel='noopener noreferrer'; a.textContent=d.label;
-      const del=document.createElement('button'); del.className='log-delete'; del.textContent='✕'; del.onclick=()=>deleteDoc(key,i);
-      li.appendChild(icon); li.appendChild(a); li.appendChild(del); ul.appendChild(li);
-    });
-    container.appendChild(ul);
-  } else {
-    const p=document.createElement('p'); p.className='doc-empty'; p.textContent='No documents yet — paste a Google Drive link below.'; container.appendChild(p);
-  }
-  const addRow=document.createElement('div'); addRow.className='doc-add-row';
-  const lInp=document.createElement('input'); lInp.className='doc-input'; lInp.id='doclabel-'+key; lInp.placeholder='Label (e.g. Medical POA)';
-  const uInp=document.createElement('input'); uInp.className='doc-input'; uInp.id='docurl-'+key; uInp.placeholder='Paste Google Drive link...';
-  uInp.onkeydown=e=>{if(e.key==='Enter') window.addDoc(key);};
-  const btn=document.createElement('button'); btn.className='doc-add-btn'; btn.textContent='+ Add Link'; btn.onclick=()=>window.addDoc(key);
-  addRow.appendChild(lInp); addRow.appendChild(uInp); addRow.appendChild(btn); container.appendChild(addRow);
-}
-
-window.addAppt = function() {
-  const date=document.getElementById('appt-date').value.trim();
-  const provider=document.getElementById('appt-provider').value.trim();
-  const purpose=document.getElementById('appt-purpose').value.trim();
-  const type=document.getElementById('appt-type').value;
-  if(!date||!provider) return;
-  state.appts.push({date,provider,purpose,type});
-  saveToFirestore(); renderAppts();
-  ['appt-date','appt-provider','appt-purpose'].forEach(id=>document.getElementById(id).value='');
-};
-window.deleteAppt = function(idx) { state.appts.splice(idx,1); saveToFirestore(); renderAppts(); };
-function renderAppts() {
-  const tbody=document.getElementById('appt-tbody'); tbody.innerHTML='';
-  const tagMap={virtual:'tag-virtual',inperson:'tag-inperson',phone:'tag-phone',past:'tag-past'};
-  const labelMap={virtual:'Virtual',inperson:'In-Person',phone:'Phone',past:'Past'};
-  (state.appts||[]).forEach((a,i)=>{
-    const tr=document.createElement('tr');
-    const dateCell=document.createElement('td'); dateCell.className=(a.type==='past'?'appt-past':'appt-upcoming')+' appt-edit-cell'; dateCell.contentEditable='false'; dateCell.textContent=a.date;
-    dateCell.onblur=()=>{a.date=dateCell.textContent.trim();saveToFirestore();};
-    const provCell=document.createElement('td'); provCell.style.fontWeight='500'; provCell.className='appt-edit-cell'; provCell.contentEditable='false'; provCell.textContent=a.provider;
-    provCell.onblur=()=>{a.provider=provCell.textContent.trim();saveToFirestore();};
-    const purpCell=document.createElement('td'); purpCell.style.color='var(--slate-light)'; purpCell.className='appt-edit-cell'; purpCell.contentEditable='false'; purpCell.textContent=a.purpose||'—';
-    purpCell.onblur=()=>{a.purpose=purpCell.textContent.trim();saveToFirestore();};
-    const tagCell=document.createElement('td'); tagCell.innerHTML=`<span class="appt-tag ${tagMap[a.type]||'tag-past'}">${labelMap[a.type]||a.type}</span>`;
-    const delCell=document.createElement('td'); delCell.innerHTML=`<button class="log-delete" onclick="deleteAppt(${i})">✕</button>`;
-    tr.appendChild(dateCell); tr.appendChild(provCell); tr.appendChild(purpCell); tr.appendChild(tagCell); tr.appendChild(delCell);
-    tbody.appendChild(tr);
-  });
-  const upcoming=(state.appts||[]).filter(a=>a.type!=='past').length;
-  const badge=document.getElementById('appt-badge');
-  badge.textContent=upcoming===0?'None Upcoming':upcoming+' Upcoming';
-  badge.className='section-badge '+(upcoming>0?'badge-blue':'badge-gray');
-}
-
-const sectionLabels = {
-  social:'Social Worker',snap:'SNAP / EBT',medicaid:'Medicaid',
-  medical:'Medical',therapy:'Therapy',authority:'Care Authority',
-  housing:'Housing',financial:'Financial',emergency:'Emergency'
-};
+// ── Master To-Do ──────────────────────────────────────────────
 let completedMasterOpen = false;
-
 window.addMasterAction = function() {
   const inp = document.getElementById('master-input');
   const sel = document.getElementById('master-section-select');
-  const text = inp.value.trim(); if(!text) return;
+  const text = inp.value.trim(); if (!text) return;
   const key = sel.value;
-  if(!state.actions[key]) state.actions[key]=[];
-  state.actions[key].push({text,done:false});
-  saveToFirestore(); renderActions(key); renderMasterTodo(); inp.value='';
+  if (!state.actions[key]) state.actions[key] = [];
+  state.actions[key].push({text, done:false});
+  saveToFirestore(); renderActions(key); renderMasterTodo(); inp.value = '';
 };
-
 window.toggleMasterAction = function(key, idx) {
   state.actions[key][idx].done = !state.actions[key][idx].done;
   saveToFirestore(); renderActions(key); renderMasterTodo();
 };
-
 window.toggleCompletedMaster = function() {
   completedMasterOpen = !completedMasterOpen;
-  const body = document.getElementById('completed-body');
-  const icon = document.getElementById('completed-toggle-icon');
-  const label = document.getElementById('completed-toggle-label');
-  body.classList.toggle('open', completedMasterOpen);
-  icon.textContent = completedMasterOpen ? '▲' : '▼';
-  label.textContent = completedMasterOpen ? 'Hide Completed' : 'Show Completed';
+  document.getElementById('completed-body').classList.toggle('open', completedMasterOpen);
+  document.getElementById('completed-toggle-icon').textContent = completedMasterOpen ? '▲' : '▼';
+  document.getElementById('completed-toggle-label').textContent = completedMasterOpen ? 'Hide Completed' : 'Show Completed';
 };
-
 function renderMasterTodo() {
   const openList = document.getElementById('master-todo-list');
   const doneList = document.getElementById('master-completed-list');
-  if(!openList || !doneList) return;
+  if (!openList || !doneList) return;
   openList.innerHTML = ''; doneList.innerHTML = '';
   let openCount = 0, doneCount = 0;
   noteSections.forEach(key => {
-    const items = state.actions[key] || [];
-    items.forEach((item, idx) => {
-      const li = document.createElement('li');
-      li.className = 'master-todo-item';
+    (state.actions[key]||[]).forEach((item, idx) => {
+      const li = document.createElement('li'); li.className = 'master-todo-item';
       const chk = document.createElement('div');
       chk.className = 'action-check' + (item.done ? ' checked' : '');
       chk.onclick = () => toggleMasterAction(key, idx);
       const src = document.createElement('span');
       src.className = 'master-todo-source';
-      src.textContent = sectionLabels[key] || key;
+      src.textContent = sectionLabels[key]||key;
       const sp = document.createElement('span');
       sp.className = 'master-todo-text' + (item.done ? ' done' : '');
       sp.textContent = item.text;
       li.appendChild(chk); li.appendChild(src); li.appendChild(sp);
-      if(item.done) { doneList.appendChild(li); doneCount++; }
+      if (item.done) { doneList.appendChild(li); doneCount++; }
       else { openList.appendChild(li); openCount++; }
     });
   });
-  if(openCount === 0) {
-    const empty = document.createElement('p');
-    empty.className = 'master-empty';
-    empty.textContent = 'No open to-dos — great job!';
-    openList.appendChild(empty);
+  if (openCount === 0) {
+    const p = document.createElement('p'); p.className = 'master-empty';
+    p.textContent = 'No open to-dos — great job!'; openList.appendChild(p);
   }
-  if(doneCount === 0) {
-    const empty = document.createElement('p');
-    empty.className = 'master-empty';
-    empty.textContent = 'No completed items yet.';
-    doneList.appendChild(empty);
+  if (doneCount === 0) {
+    const p = document.createElement('p'); p.className = 'master-empty';
+    p.textContent = 'No completed items yet.'; doneList.appendChild(p);
   }
   const badge = document.getElementById('master-badge');
-  if(badge) {
-    badge.textContent = openCount === 0 ? 'All Done!' : openCount + ' Open';
+  if (badge) {
+    badge.textContent = openCount === 0 ? 'All Done!' : openCount+' Open';
     badge.className = 'section-badge ' + (openCount === 0 ? 'badge-green' : 'badge-rose');
   }
 }
 
+// ── Logs ──────────────────────────────────────────────────────
+window.addLogEntry = function(key) {
+  const dEl = document.getElementById('logdate-'+key);
+  const tEl = document.getElementById('logtext-'+key);
+  const d = dEl.value.trim(), t = tEl.value.trim(); if (!t) return;
+  if (!state.logs[key]) state.logs[key] = [];
+  state.logs[key].push({date: d||todayStr(), text: t});
+  saveToFirestore(); renderLog(key); dEl.value=''; tEl.value='';
+};
+function deleteLogEntry(key, idx) {
+  state.logs[key].splice(idx, 1);
+  saveToFirestore(); renderLog(key);
+}
+function renderLog(key) {
+  const container = document.getElementById('log-widget-'+key); if (!container) return;
+  container.innerHTML = '';
+  const widget = document.createElement('div'); widget.className = 'log-widget';
+  const title = document.createElement('div'); title.className = 'log-widget-title';
+  title.textContent = logTitles[key]||'Contact Log'; widget.appendChild(title);
+  const ul = document.createElement('ul'); ul.className = 'log-entries';
+  const entries = state.logs[key]||[];
+  if (!entries.length) {
+    const e = document.createElement('li');
+    e.style.cssText = 'font-size:0.82rem;color:#bbb;padding:4px 0;';
+    e.textContent = 'No entries yet.'; ul.appendChild(e);
+  }
+  entries.forEach((entry, i) => {
+    const li = document.createElement('li'); li.className = 'log-entry';
+    const dateEl = document.createElement('span'); dateEl.className = 'log-date';
+    dateEl.contentEditable = 'true'; dateEl.textContent = entry.date;
+    dateEl.oninput = () => { entry.date = dateEl.textContent.trim(); saveToFirestore(); };
+    const textEl = document.createElement('span'); textEl.className = 'log-text';
+    textEl.contentEditable = 'true'; textEl.textContent = entry.text;
+    textEl.oninput = () => { entry.text = textEl.textContent.trim(); saveToFirestore(); };
+    const del = document.createElement('button'); del.className = 'log-delete';
+    del.textContent = '✕'; del.onclick = () => deleteLogEntry(key, i);
+    li.appendChild(dateEl); li.appendChild(textEl); li.appendChild(del);
+    ul.appendChild(li);
+  });
+  widget.appendChild(ul);
+  const addRow = document.createElement('div'); addRow.className = 'log-add-row';
+  const dInp = document.createElement('input'); dInp.className = 'log-date-input';
+  dInp.id = 'logdate-'+key; dInp.placeholder = todayStr();
+  dInp.onkeydown = e => { if (e.key==='Enter') window.addLogEntry(key); };
+  const tInp = document.createElement('input'); tInp.className = 'log-text-input';
+  tInp.id = 'logtext-'+key; tInp.placeholder = 'Add log entry...';
+  tInp.onkeydown = e => { if (e.key==='Enter') window.addLogEntry(key); };
+  const btn = document.createElement('button'); btn.className = 'log-add-btn';
+  btn.textContent = '+ Log'; btn.onclick = () => window.addLogEntry(key);
+  addRow.appendChild(dInp); addRow.appendChild(tInp); addRow.appendChild(btn);
+  widget.appendChild(addRow); container.appendChild(widget);
+}
+
+// ── Documents ─────────────────────────────────────────────────
+window.addDoc = function(key) {
+  const lEl = document.getElementById('doclabel-'+key);
+  const uEl = document.getElementById('docurl-'+key);
+  const label = lEl.value.trim(), url = uEl.value.trim(); if (!url) return;
+  if (!state.docs[key]) state.docs[key] = [];
+  state.docs[key].push({label: label||'Document', url});
+  saveToFirestore(); renderDocs(key); lEl.value=''; uEl.value='';
+};
+function deleteDoc(key, idx) {
+  state.docs[key].splice(idx, 1);
+  saveToFirestore(); renderDocs(key);
+}
+function renderDocs(key) {
+  const container = document.getElementById('docs-'+key); if (!container) return;
+  container.innerHTML = '';
+  const docs = state.docs[key]||[];
+  if (docs.length) {
+    const ul = document.createElement('ul'); ul.className = 'doc-list';
+    docs.forEach((d, i) => {
+      const li = document.createElement('li'); li.className = 'doc-entry';
+      const icon = document.createElement('span'); icon.textContent = '📄';
+      icon.style.fontSize = '1rem'; icon.style.flexShrink = '0';
+      const a = document.createElement('a'); a.className = 'doc-link';
+      a.href = d.url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+      a.textContent = d.label;
+      const del = document.createElement('button'); del.className = 'log-delete';
+      del.textContent = '✕'; del.onclick = () => deleteDoc(key, i);
+      li.appendChild(icon); li.appendChild(a); li.appendChild(del);
+      ul.appendChild(li);
+    });
+    container.appendChild(ul);
+  } else {
+    const p = document.createElement('p'); p.className = 'doc-empty';
+    p.textContent = 'No documents yet — paste a Google Drive link below.';
+    container.appendChild(p);
+  }
+  const addRow = document.createElement('div'); addRow.className = 'doc-add-row';
+  const lInp = document.createElement('input'); lInp.className = 'doc-input';
+  lInp.id = 'doclabel-'+key; lInp.placeholder = 'Label (e.g. Medical POA)';
+  const uInp = document.createElement('input'); uInp.className = 'doc-input';
+  uInp.id = 'docurl-'+key; uInp.placeholder = 'Paste Google Drive link...';
+  uInp.onkeydown = e => { if (e.key==='Enter') window.addDoc(key); };
+  const btn = document.createElement('button'); btn.className = 'doc-add-btn';
+  btn.textContent = '+ Add Link'; btn.onclick = () => window.addDoc(key);
+  addRow.appendChild(lInp); addRow.appendChild(uInp); addRow.appendChild(btn);
+  container.appendChild(addRow);
+}
+
+// ── Appointments ──────────────────────────────────────────────
+window.addAppt = function() {
+  const date = document.getElementById('appt-date').value.trim();
+  const provider = document.getElementById('appt-provider').value.trim();
+  const purpose = document.getElementById('appt-purpose').value.trim();
+  const type = document.getElementById('appt-type').value;
+  if (!date||!provider) return;
+  state.appts.push({date, provider, purpose, type});
+  saveToFirestore(); renderAppts();
+  ['appt-date','appt-provider','appt-purpose'].forEach(id => document.getElementById(id).value='');
+};
+window.deleteAppt = function(idx) {
+  state.appts.splice(idx, 1);
+  saveToFirestore(); renderAppts();
+};
+function renderAppts() {
+  const tbody = document.getElementById('appt-tbody'); tbody.innerHTML = '';
+  const tagMap = {virtual:'tag-virtual',inperson:'tag-inperson',phone:'tag-phone',past:'tag-past'};
+  const labelMap = {virtual:'Virtual',inperson:'In-Person',phone:'Phone',past:'Past'};
+  (state.appts||[]).forEach((a, i) => {
+    const tr = document.createElement('tr');
+    const dateCell = document.createElement('td');
+    dateCell.className = (a.type==='past' ? 'appt-past' : 'appt-upcoming') + ' appt-edit-cell';
+    dateCell.contentEditable = 'false'; dateCell.textContent = a.date;
+    dateCell.onblur = () => { a.date = dateCell.textContent.trim(); saveToFirestore(); };
+    const provCell = document.createElement('td');
+    provCell.style.fontWeight = '500'; provCell.className = 'appt-edit-cell';
+    provCell.contentEditable = 'false'; provCell.textContent = a.provider;
+    provCell.onblur = () => { a.provider = provCell.textContent.trim(); saveToFirestore(); };
+    const purpCell = document.createElement('td');
+    purpCell.style.color = 'var(--slate-light)'; purpCell.className = 'appt-edit-cell';
+    purpCell.contentEditable = 'false'; purpCell.textContent = a.purpose||'—';
+    purpCell.onblur = () => { a.purpose = purpCell.textContent.trim(); saveToFirestore(); };
+    const tagCell = document.createElement('td');
+    tagCell.innerHTML = `<span class="appt-tag ${tagMap[a.type]||'tag-past'}">${labelMap[a.type]||a.type}</span>`;
+    const delCell = document.createElement('td');
+    delCell.innerHTML = `<button class="log-delete" onclick="deleteAppt(${i})">✕</button>`;
+    tr.appendChild(dateCell); tr.appendChild(provCell); tr.appendChild(purpCell);
+    tr.appendChild(tagCell); tr.appendChild(delCell);
+    tbody.appendChild(tr);
+  });
+  const upcoming = (state.appts||[]).filter(a => a.type!=='past').length;
+  const badge = document.getElementById('appt-badge');
+  badge.textContent = upcoming===0 ? 'None Upcoming' : upcoming+' Upcoming';
+  badge.className = 'section-badge ' + (upcoming>0 ? 'badge-blue' : 'badge-gray');
+}
 </script>
 </body>
 </html>
