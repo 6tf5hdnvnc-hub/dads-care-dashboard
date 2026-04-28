@@ -178,6 +178,30 @@
   .master-add-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;}
   .master-section-select{background:var(--cream);border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;color:var(--slate);outline:none;transition:border-color 0.2s;}
   .master-section-select:focus{border-color:var(--sage);}
+
+  /* Edit Mode */
+  .edit-mode-btn{background:var(--amber-pale);border-color:var(--amber);color:var(--bark);}
+  .edit-mode-btn:hover{background:var(--amber);color:white;}
+  .edit-mode-btn.active{background:var(--sage);border-color:var(--sage);color:white;}
+  body.edit-mode .editable{cursor:text;border-bottom:1.5px dashed var(--sage-light);padding-bottom:1px;min-width:20px;display:inline-block;transition:background 0.15s;}
+  body.edit-mode .editable:hover{background:rgba(124,158,138,0.1);}
+  body.edit-mode .editable:focus{outline:none;background:rgba(124,158,138,0.15);border-bottom-color:var(--sage);box-shadow:none;}
+  body:not(.edit-mode) .editable{cursor:default;}
+  body.edit-mode .edit-delete-btn{display:inline-flex;}
+  .edit-delete-btn{display:none;background:none;border:none;color:#ccc;cursor:pointer;font-size:0.8rem;padding:0 3px;vertical-align:middle;transition:color 0.15s;}
+  .edit-delete-btn:hover{color:var(--rose);}
+  body.edit-mode .contact-row a{pointer-events:none;}
+  body:not(.edit-mode) .contact-row a{pointer-events:auto;}
+  .edit-hint{display:none;font-size:0.75rem;color:var(--sage);font-style:italic;margin-bottom:12px;padding:6px 10px;background:var(--sage-pale);border-radius:6px;}
+  body.edit-mode .edit-hint{display:block;}
+  /* Action item delete in edit mode */
+  body.edit-mode .action-del{display:inline-flex;}
+  .action-del{display:none;background:none;border:none;color:#ccc;cursor:pointer;font-size:0.8rem;padding:0 3px;margin-left:4px;transition:color 0.15s;}
+  .action-del:hover{color:var(--rose);}
+  /* Appointment edit */
+  body.edit-mode .appt-edit-cell{cursor:text;border-bottom:1.5px dashed var(--sage-light);}
+  body.edit-mode .appt-edit-cell:focus{outline:none;background:rgba(124,158,138,0.1);}
+
   @media(max-width:640px){
     .header{padding:24px 16px 20px;}.header h1{font-size:1.4rem;}
     .container{padding:20px 12px 40px;}
@@ -239,13 +263,16 @@
   </div>
   <div class="toolbar">
     <button class="toolbar-btn" onclick="expandAll()">&#x229E; Expand All</button>
+    <button class="toolbar-btn edit-mode-btn" id="editModeBtn" onclick="toggleEditMode()">&#9998; Edit Mode</button>
     <button class="toolbar-btn" onclick="window.print()">&#128424; Print / Save PDF</button>
   </div>
+
+  <div class="edit-hint">&#9998; Edit mode is on — click any text to edit it. Changes save automatically.</div>
 
   <div class="section open" id="sec-appts">
     <div class="section-header" onclick="toggle('sec-appts')">
       <div class="section-title-row"><div class="section-icon icon-teal">&#128197;</div>
-        <div><div class="section-title">Upcoming Appointments</div><div class="section-subtitle">All scheduled visits &amp; calls</div></div>
+        <div><div class="section-title">Upcoming Appointments</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">All scheduled visits &amp; calls</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-blue" id="appt-badge">1 Upcoming</span><span class="toggle-icon">&#9660;</span></div>
     </div>
@@ -271,7 +298,7 @@
   <div class="section open" id="sec-master">
     <div class="section-header" onclick="toggle('sec-master')">
       <div class="section-title-row"><div class="section-icon icon-teal">&#9989;</div>
-        <div><div class="section-title">Master To-Do List</div><div class="section-subtitle">All action items across every section</div></div>
+        <div><div class="section-title">Master To-Do List</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">All action items across every section</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-rose" id="master-badge">0 Open</span><span class="toggle-icon">&#9660;</span></div>
     </div>
@@ -305,13 +332,13 @@
   <div class="section open" id="sec-social">
     <div class="section-header" onclick="toggle('sec-social')">
       <div class="section-title-row"><div class="section-icon icon-sage">&#129309;</div>
-        <div><div class="section-title">Social Worker</div><div class="section-subtitle">Primary care coordinator</div></div>
+        <div><div class="section-title">Social Worker</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Primary care coordinator</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-green">Active</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name">Ms. Robinson</div>
+        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Ms. Robinson</span></div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17042087622">+1 (704) 208-7622</a></div>
         <div class="contact-label">Email</div><div class="contact-row">&#9993;&#65039; <a href="mailto:Yaisha.Robinson@mecklenburgcountync.gov">Yaisha.Robinson@mecklenburgcountync.gov</a></div>
       </div></div>
@@ -350,14 +377,14 @@
   <div class="section open" id="sec-snap">
     <div class="section-header" onclick="toggle('sec-snap')">
       <div class="section-title-row"><div class="section-icon icon-amber">&#128717;</div>
-        <div><div class="section-title">SNAP / EBT (Food Stamps)</div><div class="section-subtitle">Approved — EBT card not yet received</div></div>
+        <div><div class="section-title">SNAP / EBT (Food Stamps)</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Approved — EBT card not yet received</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">Card Pending</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="status-block amber"><strong>Status:</strong> Approved for SNAP. EBT card has not arrived. Follow up to request replacement or confirm mailing address on file.</div>
+      <div class="status-block amber"><strong>Status:</strong><span class="editable" contenteditable="false" onblur="saveEditable(this)"> Approved for SNAP. EBT card has not arrived. Follow up to request replacement or confirm mailing address on file.</span></div>
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name">SNAP / EBT State Hotline</div>
+        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">SNAP / EBT State Hotline</span></div>
         <div class="contact-label">Phone (card issues)</div><div class="contact-row">&#128222; <a href="tel:8886227328">888-622-7328</a></div>
       </div></div>
       <div class="subsection" id="subsec-log-snap">
@@ -394,14 +421,14 @@
   <div class="section open" id="sec-medicaid">
     <div class="section-header" onclick="toggle('sec-medicaid')">
       <div class="section-title-row"><div class="section-icon icon-rose">&#127973;</div>
-        <div><div class="section-title">Medicaid</div><div class="section-subtitle">Partially denied — awaiting more information</div></div>
+        <div><div class="section-title">Medicaid</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Partially denied — awaiting more information</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-rose">Status Unclear</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="status-block rose"><strong>Status:</strong> Denied for most aspects of Medicaid. Agency has also requested additional information. Needs follow-up to clarify what documentation is required and which aspects remain open.</div>
+      <div class="status-block rose"><strong>Status:</strong><span class="editable" contenteditable="false" onblur="saveEditable(this)"> Denied for most aspects of Medicaid. Agency has also requested additional information. Needs follow-up to clarify what documentation is required and which aspects remain open.</span></div>
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name">Charles Newsome</div>
+        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Charles Newsome</span></div>
         <div class="contact-label">Email</div><div class="contact-row">&#9993;&#65039; <a href="mailto:charles.newson@mecklenburgcountync.gov">charles.newson@mecklenburgcountync.gov</a></div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9803146437">980-314-6437</a></div>
       </div></div>
@@ -439,55 +466,55 @@
   <div class="section open" id="sec-medical">
     <div class="section-header" onclick="toggle('sec-medical')">
       <div class="section-title-row"><div class="section-icon icon-blue">&#128138;</div>
-        <div><div class="section-title">Medical &amp; Healthcare</div><div class="section-subtitle">Doctors, medications, appointments</div></div>
+        <div><div class="section-title">Medical &amp; Healthcare</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Doctors, medications, appointments</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-blue">Appt Tomorrow</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="provider-label">Neuropsychology — Carolinas Rehab Hospital</div>
+      <div class="provider-label"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Neuropsychology — Carolinas Rehab Hospital</span></div>
       <div class="contacts-grid">
         <div class="contact-card">
-          <div class="contact-name">Dept. of Neuropsychological Services</div>
-          <div class="contact-label">Neurologist</div><div class="contact-row">&#128104;&#8205;&#9877;&#65039; Dr. Ablitz</div>
-          <div class="contact-label">Address</div><div class="contact-row">&#128205; 1100 Blythe Blvd, Charlotte</div>
+          <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Dept. of Neuropsychological Services</span></div>
+          <div class="contact-label">Neurologist</div><div class="contact-row">&#128104;&#8205;&#9877;<span class="editable" contenteditable="false" onblur="saveEditable(this)">&#65039; Dr. Ablitz</span></div>
+          <div class="contact-label">Address</div><div class="contact-row">&#128205; <span class="editable" contenteditable="false" onblur="saveEditable(this)">1100 Blythe Blvd, Charlotte</span></div>
           <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7043557328">704-355-7328</a></div>
-          <div class="contact-label">Parking</div><div class="contact-row">&#127359; Orange Parking Lot &middot; Code: 61853#</div>
-          <div class="contact-label">Floor</div><div class="contact-row">&#127970; 2nd Floor</div>
+          <div class="contact-label">Parking</div><div class="contact-row">&#127359; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Orange Parking Lot &middot; Code: 61853#</span></div>
+          <div class="contact-label">Floor</div><div class="contact-row">&#127970; <span class="editable" contenteditable="false" onblur="saveEditable(this)">2nd Floor</span></div>
         </div>
         <div class="contact-card">
-          <div class="contact-name">Appointments</div>
-          <div class="contact-label">Neurological Work-Up</div><div class="contact-row">&#128197; Completed — April 16, 2026</div>
+          <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Appointments</span></div>
+          <div class="contact-label">Neurological Work-Up</div><div class="contact-row">&#128197; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Completed — April 16, 2026</span></div>
           <div class="contact-label" style="margin-top:8px;">Follow-Up (Virtual)</div>
           <div class="contact-row" style="color:var(--rose);font-weight:600;">&#128197; April 28, 2026 — 11:00 AM</div>
         </div>
       </div>
       <div class="divider"></div>
 
-      <div class="provider-label">Primary Care</div>
+      <div class="provider-label"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Primary Care</span></div>
       <div class="contacts-grid">
         <div class="contact-card">
-          <div class="contact-name">Lawrence Moffat, MD</div>
-          <div class="contact-label">Practice</div><div class="contact-row">&#127968; Mecklenburg Medical Group</div>
+          <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Lawrence Moffat, MD</span></div>
+          <div class="contact-label">Practice</div><div class="contact-row">&#127968; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Mecklenburg Medical Group</span></div>
           <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7043555100">704-355-5100</a></div>
         </div>
       </div>
 
       <div class="divider"></div>
 
-      <div class="provider-label">Possible New Primary Care</div>
+      <div class="provider-label"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Possible New Primary Care</span></div>
       <div class="contacts-grid">
         <div class="contact-card">
-          <div class="contact-name">Carolina Family Healthcare</div>
+          <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Carolina Family Healthcare</span></div>
           <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7048474000">704-847-4000</a></div>
         </div>
       </div>
 
       <div class="divider"></div>
 
-      <div class="provider-label">Possible Sleep Doctor</div>
+      <div class="provider-label"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Possible Sleep Doctor</span></div>
       <div class="contacts-grid">
         <div class="contact-card">
-          <div class="contact-name">Ballantyne Sleep Diagnostic</div>
+          <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Ballantyne Sleep Diagnostic</span></div>
           <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7049435075">704-943-5075</a></div>
         </div>
       </div>
@@ -528,7 +555,7 @@
   <div class="section open" id="sec-therapy">
     <div class="section-header" onclick="toggle('sec-therapy')">
       <div class="section-title-row"><div class="section-icon icon-purple">&#129504;</div>
-        <div><div class="section-title">Therapy &amp; Peer Support</div><div class="section-subtitle">Potential providers — outreach in progress</div></div>
+        <div><div class="section-title">Therapy &amp; Peer Support</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Potential providers — outreach in progress</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">In Progress</span><span class="toggle-icon">&#9660;</span></div>
     </div>
@@ -540,9 +567,9 @@
       </div>
       <div class="subsection-body">
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name">Primary Care Solutions</div>
+        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Primary Care Solutions</span></div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045371022">+1 (704) 537-1022</a></div>
-        <div class="contact-label">Needs from us</div><div class="contact-row">&#128203; Name, DOB &amp; Medicare #</div>
+        <div class="contact-label">Needs from us</div><div class="contact-row">&#128203; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Name, DOB &amp; Medicare #</span></div>
       </div></div>
       <div id="log-widget-pcs"></div>
       </div></div>
@@ -554,12 +581,12 @@
       </div>
       <div class="subsection-body">
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name">Monarch</div>
+        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Monarch</span></div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8662727826">866-272-7826</a></div>
-        <div class="contact-label">Walk-In Hours</div><div class="contact-row">&#128694; 8–10 AM or 1–2 PM</div>
-        <div class="contact-label">Video Call</div><div class="contact-row">&#128187; 8 AM–2 PM &middot; Call in &middot; First come, first served</div>
+        <div class="contact-label">Walk-In Hours</div><div class="contact-row">&#128694; <span class="editable" contenteditable="false" onblur="saveEditable(this)">8–10 AM or 1–2 PM</span></div>
+        <div class="contact-label">Video Call</div><div class="contact-row">&#128187; <span class="editable" contenteditable="false" onblur="saveEditable(this)">8 AM–2 PM &middot; Call in &middot; First come, first served</span></div>
         <div class="contact-label">Availability</div>
-        <div class="contact-row">&#9989; Peer Support available</div>
+        <div class="contact-row">&#9989; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Peer Support available</span></div>
         <div class="contact-row" style="color:var(--rose);">&#9888;&#65039; CST currently at capacity</div>
       </div></div>
       <div id="log-widget-monarch"></div>
@@ -572,7 +599,7 @@
       </div>
       <div class="subsection-body">
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name">Genesis Project 1, Inc.</div>
+        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Genesis Project 1, Inc.</span></div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045960505">+1 (704) 596-0505</a></div>
       </div></div>
       <div id="log-widget-genesis"></div>
@@ -585,9 +612,9 @@
       </div>
       <div class="subsection-body">
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name">Carolina Outreach</div>
+        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">Carolina Outreach</span></div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8448661166">844-866-1166</a></div>
-        <div class="contact-label">Insurance</div><div class="contact-row">&#9989; Accepts Medicare</div>
+        <div class="contact-label">Insurance</div><div class="contact-row">&#9989; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Accepts Medicare</span></div>
       </div></div>
       <div id="log-widget-carolina"></div>
       </div></div>
@@ -599,9 +626,9 @@
       </div>
       <div class="subsection-body">
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name">RHA</div>
+        <div class="contact-name"><span class="editable" contenteditable="false" onblur="saveEditable(this)" data-field="contact">RHA</span></div>
         <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9195189293">919-518-9293</a></div>
-        <div class="contact-label">Insurance</div><div class="contact-row">&#9989; Accepts Medicare</div>
+        <div class="contact-label">Insurance</div><div class="contact-row">&#9989; <span class="editable" contenteditable="false" onblur="saveEditable(this)">Accepts Medicare</span></div>
       </div></div>
       <div id="log-widget-rha"></div>
       </div></div>
@@ -632,15 +659,15 @@
   <div class="section open" id="sec-authority">
     <div class="section-header" onclick="toggle('sec-authority')">
       <div class="section-title-row"><div class="section-icon icon-purple">&#9878;&#65039;</div>
-        <div><div class="section-title">Care Authority</div><div class="section-subtitle">POAs, Advanced Directive &amp; legal documents</div></div>
+        <div><div class="section-title">Care Authority</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">POAs, Advanced Directive &amp; legal documents</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">In Progress</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="provider-label">Medical POA &amp; Advanced Directive</div>
-      <div class="status-block amber"><strong>Status:</strong> Form in hand. Requires either an updated ID (ordered) or a credible witness for the notary before it can be executed.</div>
-      <div class="provider-label">Financial / Durable POA</div>
-      <div class="status-block amber"><strong>Status:</strong> Will need to go through an attorney.</div>
+      <div class="provider-label"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Medical POA &amp; Advanced Directive</span></div>
+      <div class="status-block amber"><strong>Status:</strong><span class="editable" contenteditable="false" onblur="saveEditable(this)"> Form in hand. Requires either an updated ID (ordered) or a credible witness for the notary before it can be executed.</span></div>
+      <div class="provider-label"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Financial / Durable POA</span></div>
+      <div class="status-block amber"><strong>Status:</strong><span class="editable" contenteditable="false" onblur="saveEditable(this)"> Will need to go through an attorney.</span></div>
       <div class="subsection" id="subsec-log-authority">
       <div class="subsection-header" onclick="toggleSub('log-authority')">
         <span class="subsection-title">&#128203; Log</span>
@@ -675,7 +702,7 @@
   <div class="section" id="sec-housing">
     <div class="section-header" onclick="toggle('sec-housing')">
       <div class="section-title-row"><div class="section-icon icon-sage">&#127968;</div>
-        <div><div class="section-title">Housing &amp; Daily Living</div><div class="section-subtitle">Home care, utilities, transportation</div></div>
+        <div><div class="section-title">Housing &amp; Daily Living</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Home care, utilities, transportation</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
     </div>
@@ -714,7 +741,7 @@
   <div class="section" id="sec-financial">
     <div class="section-header" onclick="toggle('sec-financial')">
       <div class="section-title-row"><div class="section-icon icon-amber">&#128176;</div>
-        <div><div class="section-title">Financial &amp; Other Benefits</div><div class="section-subtitle">SSI, Social Security, other assistance</div></div>
+        <div><div class="section-title">Financial &amp; Other Benefits</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">SSI, Social Security, other assistance</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
     </div>
@@ -753,7 +780,7 @@
   <div class="section" id="sec-emergency">
     <div class="section-header" onclick="toggle('sec-emergency')">
       <div class="section-title-row"><div class="section-icon icon-rose">&#128680;</div>
-        <div><div class="section-title">Emergency Info &amp; General Notes</div><div class="section-subtitle">Key info in case of emergency</div></div>
+        <div><div class="section-title">Emergency Info &amp; General Notes</div><div class="section-subtitle"><span class="editable" contenteditable="false" onblur="saveEditable(this)">Key info in case of emergency</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
     </div>
@@ -863,6 +890,33 @@ const seedAppts = [
   {date:'4/28/2026 · 11:00 AM',provider:'Dr. Ablitz — Neuropsychology',purpose:'Follow-up virtual visit',type:'virtual'}
 ];
 
+
+let editMode = false;
+window.toggleEditMode = function() {
+  editMode = !editMode;
+  document.body.classList.toggle('edit-mode', editMode);
+  const btn = document.getElementById('editModeBtn');
+  btn.classList.toggle('active', editMode);
+  btn.innerHTML = editMode ? '&#10003; Done Editing' : '&#9998; Edit Mode';
+  // Toggle contenteditable on all editable spans
+  document.querySelectorAll('.editable').forEach(el => {
+    el.contentEditable = editMode ? 'true' : 'false';
+  });
+  // Toggle contenteditable on appointment cells
+  document.querySelectorAll('.appt-edit-cell').forEach(el => {
+    el.contentEditable = editMode ? 'true' : 'false';
+  });
+  if(!editMode) saveToFirestore();
+};
+
+window.saveEditable = function(el) {
+  // Just triggers a save — actual data is read from DOM on save
+  if(editMode) saveToFirestore();
+};
+
+// Override saveToFirestore to also capture editable content
+const _origSave = saveToFirestore;
+
 async function saveToFirestore() {
   if (saving) { pendingSave = true; return; }
   saving = true;
@@ -961,8 +1015,13 @@ function renderActions(key) {
     const li=document.createElement('li');
     const chk=document.createElement('div'); chk.className='action-check'+(item.done?' checked':''); chk.onclick=()=>toggleAction(key,i);
     const sp=document.createElement('span'); sp.className='action-text'+(item.done?' done':''); sp.textContent=item.text;
-    li.appendChild(chk); li.appendChild(sp); ul.appendChild(li);
+    const del=document.createElement('button'); del.className='action-del'; del.textContent='✕'; del.title='Delete'; del.onclick=()=>deleteAction(key,i);
+    li.appendChild(chk); li.appendChild(sp); li.appendChild(del); ul.appendChild(li);
   });
+}
+function deleteAction(key,idx) {
+  state.actions[key].splice(idx,1);
+  saveToFirestore(); renderActions(key); renderMasterTodo();
 }
 
 window.addLogEntry = function(key) {
@@ -1048,7 +1107,15 @@ function renderAppts() {
   const labelMap={virtual:'Virtual',inperson:'In-Person',phone:'Phone',past:'Past'};
   (state.appts||[]).forEach((a,i)=>{
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td class="${a.type==='past'?'appt-past':'appt-upcoming'}">${a.date}</td><td style="font-weight:500">${a.provider}</td><td style="color:var(--slate-light)">${a.purpose||'—'}</td><td><span class="appt-tag ${tagMap[a.type]||'tag-past'}">${labelMap[a.type]||a.type}</span></td><td><button class="log-delete" onclick="deleteAppt(${i})">✕</button></td>`;
+    const dateCell=document.createElement('td'); dateCell.className=(a.type==='past'?'appt-past':'appt-upcoming')+' appt-edit-cell'; dateCell.contentEditable='false'; dateCell.textContent=a.date;
+    dateCell.onblur=()=>{a.date=dateCell.textContent.trim();saveToFirestore();};
+    const provCell=document.createElement('td'); provCell.style.fontWeight='500'; provCell.className='appt-edit-cell'; provCell.contentEditable='false'; provCell.textContent=a.provider;
+    provCell.onblur=()=>{a.provider=provCell.textContent.trim();saveToFirestore();};
+    const purpCell=document.createElement('td'); purpCell.style.color='var(--slate-light)'; purpCell.className='appt-edit-cell'; purpCell.contentEditable='false'; purpCell.textContent=a.purpose||'—';
+    purpCell.onblur=()=>{a.purpose=purpCell.textContent.trim();saveToFirestore();};
+    const tagCell=document.createElement('td'); tagCell.innerHTML=`<span class="appt-tag ${tagMap[a.type]||'tag-past'}">${labelMap[a.type]||a.type}</span>`;
+    const delCell=document.createElement('td'); delCell.innerHTML=`<button class="log-delete" onclick="deleteAppt(${i})">✕</button>`;
+    tr.appendChild(dateCell); tr.appendChild(provCell); tr.appendChild(purpCell); tr.appendChild(tagCell); tr.appendChild(delCell);
     tbody.appendChild(tr);
   });
   const upcoming=(state.appts||[]).filter(a=>a.type!=='past').length;
