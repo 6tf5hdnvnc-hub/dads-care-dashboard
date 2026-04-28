@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dad's Care Coordination</title>
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream:#f8f4ee;--warm-white:#fdfaf6;--bark:#5c3d2e;--bark-light:#7a5444;
+    --sage:#7c9e8a;--sage-light:#a8c4b2;--sage-pale:#e8f0eb;
+    --amber:#c97c2e;--amber-pale:#fdf0dc;--slate:#4a5568;--slate-light:#718096;
+    --rose:#b05070;--rose-pale:#fceef2;--border:rgba(92,61,46,0.12);
+    --shadow:0 2px 12px rgba(92,61,46,0.08);--shadow-hover:0 6px 24px rgba(92,61,46,0.14);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Source Sans 3',sans-serif;background:var(--cream);color:var(--slate);min-height:100vh;line-height:1.6;}
+  .auth-overlay{position:fixed;inset:0;background:var(--bark);display:flex;align-items:center;justify-content:center;z-index:9999;}
+  .auth-overlay.hidden{display:none;}
+  .auth-box{background:var(--warm-white);border-radius:18px;padding:40px 36px 36px;width:320px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+  .auth-box h2{font-family:'Lora',serif;font-size:1.4rem;color:var(--bark);margin-bottom:6px;}
+  .auth-box p{font-size:0.85rem;color:var(--slate-light);margin-bottom:24px;}
+  .auth-lock{font-size:2.5rem;margin-bottom:16px;}
+  .auth-input-wrap{position:relative;margin-bottom:14px;}
+  .auth-input{width:100%;background:var(--cream);border:1.5px solid var(--border);border-radius:10px;padding:12px 44px 12px 16px;font-family:'Source Sans 3',sans-serif;font-size:1rem;color:var(--bark);outline:none;transition:border-color 0.2s;}
+  .auth-input:focus{border-color:var(--sage);}
+  .auth-toggle{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1rem;color:var(--slate-light);}
+  .auth-btn{width:100%;background:var(--sage);color:white;border:none;border-radius:10px;padding:13px;font-family:'Source Sans 3',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;transition:background 0.15s;}
+  .auth-btn:hover{background:var(--bark-light);}
+  .auth-error{font-size:0.82rem;color:var(--rose);margin-top:10px;min-height:18px;}
+  .sync-banner{background:var(--sage);color:white;text-align:center;padding:8px;font-size:0.82rem;font-weight:600;display:none;}
+  .sync-banner.show{display:block;}
+  .sync-banner.error{background:var(--rose);}
+  .header{background:var(--bark);color:var(--cream);padding:32px 40px 28px;position:relative;overflow:hidden;}
+  .header::before{content:'';position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.05);}
+  .header::after{content:'';position:absolute;bottom:-40px;left:30%;width:140px;height:140px;border-radius:50%;background:rgba(255,255,255,0.04);}
+  .header-inner{position:relative;z-index:1;}
+  .header h1{font-family:'Lora',serif;font-size:1.9rem;font-weight:600;letter-spacing:-0.01em;margin-bottom:4px;}
+  .header p{font-size:0.95rem;opacity:0.75;font-weight:300;}
+  .last-updated{font-size:0.8rem;opacity:0.6;margin-top:8px;font-style:italic;}
+  .container{max-width:860px;margin:0 auto;padding:36px 20px 60px;}
+  .status-bar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
+  .status-chip{display:flex;align-items:center;gap:7px;background:var(--warm-white);border:1px solid var(--border);border-radius:20px;padding:6px 14px;font-size:0.82rem;font-weight:600;color:var(--slate);}
+  .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+  .dot-green{background:#4caf7d;}.dot-amber{background:var(--amber);}.dot-rose{background:var(--rose);}.dot-blue{background:#5b8dee;}
+  .toolbar{display:flex;justify-content:flex-end;gap:10px;margin-bottom:24px;}
+  .toolbar-btn{display:flex;align-items:center;gap:6px;background:var(--warm-white);border:1px solid var(--border);border-radius:8px;padding:8px 16px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;font-weight:600;color:var(--slate);cursor:pointer;transition:all 0.2s;}
+  .toolbar-btn:hover{background:var(--sage-pale);border-color:var(--sage-light);color:var(--bark);}
+  .section{background:var(--warm-white);border:1px solid var(--border);border-radius:14px;margin-bottom:20px;overflow:hidden;box-shadow:var(--shadow);transition:box-shadow 0.2s;}
+  .section:hover{box-shadow:var(--shadow-hover);}
+  .section-header{display:flex;align-items:center;justify-content:space-between;padding:18px 22px 16px;cursor:pointer;user-select:none;border-bottom:1px solid transparent;transition:border-color 0.2s;}
+  .section.open .section-header{border-bottom-color:var(--border);}
+  .section-title-row{display:flex;align-items:center;gap:12px;}
+  .section-icon{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;}
+  .icon-sage{background:var(--sage-pale);}.icon-amber{background:var(--amber-pale);}.icon-rose{background:var(--rose-pale);}
+  .icon-blue{background:#e8f0fc;}.icon-purple{background:#f0ecfd;}.icon-teal{background:#e0f5f0;}
+  .section-title{font-family:'Lora',serif;font-size:1.05rem;font-weight:600;color:var(--bark);}
+  .section-subtitle{font-size:0.8rem;color:var(--slate-light);margin-top:1px;}
+  .section-badge{font-size:0.72rem;font-weight:600;padding:3px 10px;border-radius:10px;letter-spacing:0.03em;text-transform:uppercase;}
+  .badge-green{background:#d4f0e2;color:#1e7a4a;}.badge-amber{background:#fde8c8;color:#8a4a10;}
+  .badge-rose{background:#fce0ea;color:#8a2040;}.badge-gray{background:#eee;color:#666;}.badge-blue{background:#d8eafc;color:#1a4a8a;}
+  .toggle-icon{font-size:0.85rem;color:var(--slate-light);transition:transform 0.25s;margin-left:8px;}
+  .section.open .toggle-icon{transform:rotate(180deg);}
+  .section-body{display:none;padding:20px 22px 22px;}
+  .section.open .section-body{display:block;}
+  .appt-table{width:100%;border-collapse:collapse;font-size:0.88rem;margin-bottom:14px;}
+  .appt-table th{text-align:left;font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--slate-light);padding:6px 10px;border-bottom:2px solid var(--border);}
+  .appt-table td{padding:10px 10px;border-bottom:1px solid var(--border);vertical-align:middle;}
+  .appt-table tr:last-child td{border-bottom:none;}
+  .appt-table tr:hover td{background:var(--cream);}
+  .appt-upcoming{color:var(--rose);font-weight:600;}.appt-past{color:var(--slate-light);}
+  .appt-tag{display:inline-block;font-size:0.7rem;font-weight:600;padding:2px 8px;border-radius:8px;text-transform:uppercase;letter-spacing:0.04em;}
+  .tag-virtual{background:#e0f0fd;color:#1a5a8a;}.tag-inperson{background:var(--sage-pale);color:#2a5a3a;}
+  .tag-phone{background:var(--amber-pale);color:#7a4a10;}.tag-past{background:#eee;color:#888;}
+  .appt-add-row{display:grid;grid-template-columns:120px 1fr 1fr 90px auto;gap:8px;margin-top:10px;align-items:center;}
+  .appt-input{background:var(--cream);border:1px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.83rem;color:var(--slate);outline:none;width:100%;transition:border-color 0.2s;}
+  .appt-input:focus{border-color:var(--sage);}
+  .contacts-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;margin-bottom:4px;}
+  .contact-card{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+  .contact-name{font-weight:600;color:var(--bark);margin-bottom:6px;font-size:0.95rem;}
+  .contact-row{display:flex;align-items:flex-start;gap:7px;font-size:0.84rem;color:var(--slate-light);margin-bottom:3px;}
+  .contact-row a{color:var(--sage);text-decoration:none;word-break:break-all;}
+  .contact-row a:hover{text-decoration:underline;}
+  .contact-label{font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--slate-light);opacity:0.7;margin-top:5px;}
+  .log-widget{background:var(--cream);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-top:12px;}
+  .log-widget-title{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--slate-light);margin-bottom:10px;}
+  .log-entries{list-style:none;margin-bottom:10px;}
+  .log-entry{display:flex;gap:10px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--border);font-size:0.85rem;}
+  .log-entry:last-child{border-bottom:none;}
+  .log-date{color:var(--bark);font-weight:600;white-space:nowrap;min-width:44px;border-radius:4px;padding:1px 3px;}
+  .log-date:focus{outline:none;background:rgba(124,158,138,0.12);box-shadow:0 0 0 2px rgba(124,158,138,0.3);}
+  .log-text{flex:1;color:var(--slate);line-height:1.5;border-radius:4px;padding:1px 4px;}
+  .log-text:focus{outline:none;background:rgba(124,158,138,0.1);box-shadow:0 0 0 2px rgba(124,158,138,0.25);}
+  .log-delete{background:none;border:none;color:#ccc;cursor:pointer;font-size:0.9rem;padding:0 2px;line-height:1;flex-shrink:0;transition:color 0.15s;}
+  .log-delete:hover{color:var(--rose);}
+  .log-add-row{display:flex;gap:7px;}
+  .log-date-input{width:80px;flex-shrink:0;background:var(--warm-white);border:1px solid var(--border);border-radius:6px;padding:6px 8px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--slate);outline:none;transition:border-color 0.2s;}
+  .log-date-input:focus{border-color:var(--sage);}
+  .log-text-input{flex:1;background:var(--warm-white);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--slate);outline:none;transition:border-color 0.2s;}
+  .log-text-input:focus{border-color:var(--sage);}
+  .log-add-btn{background:var(--sage);color:white;border:none;border-radius:6px;padding:6px 12px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background 0.15s;}
+  .log-add-btn:hover{background:var(--bark-light);}
+  .notes-label{font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;color:var(--slate-light);margin-bottom:7px;margin-top:16px;}
+  .notes-area{width:100%;background:var(--cream);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:'Source Sans 3',sans-serif;font-size:0.9rem;color:var(--slate);line-height:1.65;resize:vertical;min-height:70px;outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+  .notes-area:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(124,158,138,0.15);}
+  .notes-area::placeholder{color:#bbb;}
+  .save-indicator{display:inline-flex;align-items:center;font-size:0.75rem;color:var(--sage);opacity:0;transition:opacity 0.3s;margin-left:8px;}
+  .save-indicator.show{opacity:1;}
+  .action-list{list-style:none;margin-bottom:8px;}
+  .action-list li{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.88rem;}
+  .action-list li:last-child{border-bottom:none;}
+  .action-check{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--sage-light);flex-shrink:0;margin-top:2px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.15s;}
+  .action-check:hover{background:var(--sage-pale);border-color:var(--sage);}
+  .action-check.checked{background:var(--sage);border-color:var(--sage);}
+  .action-check.checked::after{content:'✓';color:white;font-size:11px;font-weight:700;}
+  .action-text{flex:1;line-height:1.5;}
+  .action-text.done{text-decoration:line-through;color:#aaa;}
+  .add-action-row{display:flex;gap:8px;margin-top:10px;}
+  .add-action-input{flex:1;background:var(--cream);border:1px solid var(--border);border-radius:7px;padding:7px 12px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;color:var(--slate);outline:none;transition:border-color 0.2s;}
+  .add-action-input:focus{border-color:var(--sage);}
+  .add-btn{background:var(--sage);color:white;border:none;border-radius:7px;padding:7px 16px;font-family:'Source Sans 3',sans-serif;font-size:0.85rem;font-weight:600;cursor:pointer;transition:background 0.15s;}
+  .add-btn:hover{background:var(--bark-light);}
+  .doc-list{list-style:none;margin-bottom:8px;}
+  .doc-entry{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border);font-size:0.85rem;}
+  .doc-entry:last-child{border-bottom:none;}
+  .doc-link{flex:1;color:var(--sage);text-decoration:none;word-break:break-all;font-weight:500;}
+  .doc-link:hover{text-decoration:underline;}
+  .doc-empty{font-size:0.82rem;color:#bbb;padding:4px 0 8px;}
+  .doc-add-row{display:flex;gap:7px;flex-wrap:wrap;}
+  .doc-input{flex:1;min-width:120px;background:var(--warm-white);border:1px solid var(--border);border-radius:6px;padding:6px 10px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;color:var(--slate);outline:none;transition:border-color 0.2s;}
+  .doc-input:focus{border-color:var(--sage);}
+  .doc-add-btn{background:var(--sage);color:white;border:none;border-radius:6px;padding:6px 12px;font-family:'Source Sans 3',sans-serif;font-size:0.82rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:background 0.15s;}
+  .doc-add-btn:hover{background:var(--bark-light);}
+  .status-block{background:var(--cream);border-left:3px solid var(--sage);border-radius:0 8px 8px 0;padding:11px 14px;margin-bottom:14px;font-size:0.88rem;}
+  .status-block.amber{border-left-color:var(--amber);}
+  .status-block.rose{border-left-color:var(--rose);}
+  .divider{height:1px;background:var(--border);margin:18px 0;}
+  .provider-label{font-size:0.82rem;font-weight:700;color:var(--bark);text-transform:uppercase;letter-spacing:0.05em;margin:18px 0 8px;}
+  .provider-label:first-child{margin-top:0;}
+  @media(max-width:640px){
+    .header{padding:24px 16px 20px;}.header h1{font-size:1.4rem;}
+    .container{padding:20px 12px 40px;}
+    .contacts-grid{grid-template-columns:1fr;}
+    .status-bar{gap:6px;}.status-chip{font-size:0.78rem;padding:5px 10px;}
+    .toolbar{gap:7px;}.toolbar-btn{font-size:0.8rem;padding:7px 12px;}
+    .appt-table thead{display:none;}
+    .appt-table,.appt-table tbody,.appt-table tr,.appt-table td{display:block;width:100%;}
+    .appt-table tr{background:var(--cream);border:1px solid var(--border);border-radius:10px;margin-bottom:10px;padding:12px 14px;position:relative;}
+    .appt-table tr:hover td{background:transparent;}
+    .appt-table td{padding:2px 0;border:none;font-size:0.85rem;}
+    .appt-table td:first-child{font-size:0.9rem;margin-bottom:4px;}
+    .appt-table td:nth-child(2){font-weight:600;color:var(--bark);}
+    .appt-table td:last-child{position:absolute;top:10px;right:10px;}
+    .appt-add-row{grid-template-columns:1fr 1fr;row-gap:8px;}
+    .appt-add-row input:first-child{grid-column:1/-1;}
+    .appt-add-row .add-btn{grid-column:1/-1;}
+    .log-add-row{flex-wrap:wrap;}
+    .log-date-input,.log-text-input,.log-add-btn{width:100%;}
+    .add-action-row{flex-wrap:wrap;}
+    .add-action-input,.add-btn{width:100%;}
+    .auth-box{width:calc(100vw - 48px);padding:32px 24px 28px;}
+  }
+</style>
+</head>
+<body>
+
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-box">
+    <div class="auth-lock">🔒</div>
+    <h2>Dad's Care Dashboard</h2>
+    <p>Enter password to continue</p>
+    <div class="auth-input-wrap">
+      <input class="auth-input" type="password" id="authInput" placeholder="Password" onkeydown="if(event.key==='Enter') authSubmit()">
+      <button class="auth-toggle" onclick="toggleAuthVis()" id="authToggle">👁</button>
+    </div>
+    <button class="auth-btn" onclick="authSubmit()">Unlock</button>
+    <div class="auth-error" id="authError"></div>
+  </div>
+</div>
+
+<div class="sync-banner" id="syncBanner"></div>
+
+<div class="header">
+  <div class="header-inner">
+    <h1>Dad's Care Coordination</h1>
+    <p>Benefits, services &amp; support — all in one place</p>
+    <div class="last-updated" id="lastUpdated">Last updated: April 27, 2026</div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="status-bar">
+    <div class="status-chip"><span class="status-dot dot-green"></span>Social Worker — Active</div>
+    <div class="status-chip"><span class="status-dot dot-amber"></span>SNAP/EBT — Card Pending</div>
+    <div class="status-chip"><span class="status-dot dot-rose"></span>Medicaid — Unclear</div>
+    <div class="status-chip"><span class="status-dot dot-amber"></span>Therapy — In Progress</div>
+    <div class="status-chip"><span class="status-dot dot-blue"></span>Neurology — Appt 4/28</div>
+  </div>
+  <div class="toolbar">
+    <button class="toolbar-btn" onclick="expandAll()">&#x229E; Expand All</button>
+    <button class="toolbar-btn" onclick="window.print()">&#128424; Print / Save PDF</button>
+  </div>
+
+  <div class="section open" id="sec-appts">
+    <div class="section-header" onclick="toggle('sec-appts')">
+      <div class="section-title-row"><div class="section-icon icon-teal">&#128197;</div>
+        <div><div class="section-title">Upcoming Appointments</div><div class="section-subtitle">All scheduled visits &amp; calls</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-blue" id="appt-badge">1 Upcoming</span><span class="toggle-icon">&#9660;</span></div>
+    </div>
+    <div class="section-body">
+      <table class="appt-table">
+        <thead><tr><th>Date &amp; Time</th><th>Provider / Dept.</th><th>Purpose</th><th>Type</th><th></th></tr></thead>
+        <tbody id="appt-tbody"></tbody>
+      </table>
+      <div class="appt-add-row">
+        <input class="appt-input" id="appt-date" type="text" placeholder="Date &amp; time">
+        <input class="appt-input" id="appt-provider" type="text" placeholder="Provider / Dept.">
+        <input class="appt-input" id="appt-purpose" type="text" placeholder="Purpose / notes">
+        <select class="appt-input" id="appt-type">
+          <option value="virtual">Virtual</option><option value="inperson">In-Person</option>
+          <option value="phone">Phone</option><option value="past">Past</option>
+        </select>
+        <button class="add-btn" onclick="addAppt()">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section open" id="sec-social">
+    <div class="section-header" onclick="toggle('sec-social')">
+      <div class="section-title-row"><div class="section-icon icon-sage">&#129309;</div>
+        <div><div class="section-title">Social Worker</div><div class="section-subtitle">Primary care coordinator</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-green">Active</span><span class="toggle-icon">&#9660;</span></div>
+    </div>
+    <div class="section-body">
+      <div class="contacts-grid"><div class="contact-card">
+        <div class="contact-name">Ms. Robinson</div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17042087622">+1 (704) 208-7622</a></div>
+        <div class="contact-label">Email</div><div class="contact-row">&#9993;&#65039; <a href="mailto:Yaisha.Robinson@mecklenburgcountync.gov">Yaisha.Robinson@mecklenburgcountync.gov</a></div>
+      </div></div>
+      <div id="log-widget-social"></div>
+      <div class="notes-label">Notes <span class="save-indicator" id="save-social">&#10003; Saved</span></div>
+      <textarea class="notes-area" id="notes-social" placeholder="Latest conversations, what was discussed, next steps..." oninput="saveNote('social')" rows="3"></textarea>
+      <div class="notes-label">Documents</div><div id="docs-social"></div>
+      <div class="notes-label">Action Items</div>
+      <ul class="action-list" id="actions-social"></ul>
+      <div class="add-action-row">
+        <input class="add-action-input" id="input-social" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('social')">
+        <button class="add-btn" onclick="addAction('social')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section open" id="sec-snap">
+    <div class="section-header" onclick="toggle('sec-snap')">
+      <div class="section-title-row"><div class="section-icon icon-amber">&#128717;</div>
+        <div><div class="section-title">SNAP / EBT (Food Stamps)</div><div class="section-subtitle">Approved — EBT card not yet received</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">Card Pending</span><span class="toggle-icon">&#9660;</span></div>
+    </div>
+    <div class="section-body">
+      <div class="status-block amber"><strong>Status:</strong> Approved for SNAP. EBT card has not arrived. Follow up to request replacement or confirm mailing address on file.</div>
+      <div class="contacts-grid"><div class="contact-card">
+        <div class="contact-name">SNAP / EBT State Hotline</div>
+        <div class="contact-label">Phone (card issues)</div><div class="contact-row">&#128222; <a href="tel:8886227328">888-622-7328</a></div>
+      </div></div>
+      <div id="log-widget-snap"></div>
+      <div class="notes-label">Notes <span class="save-indicator" id="save-snap">&#10003; Saved</span></div>
+      <textarea class="notes-area" id="notes-snap" placeholder="Date card was expected, mailing address, reference numbers..." oninput="saveNote('snap')" rows="3"></textarea>
+      <div class="notes-label">Documents</div><div id="docs-snap"></div>
+      <div class="notes-label">Action Items</div>
+      <ul class="action-list" id="actions-snap"></ul>
+      <div class="add-action-row">
+        <input class="add-action-input" id="input-snap" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('snap')">
+        <button class="add-btn" onclick="addAction('snap')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section open" id="sec-medicaid">
+    <div class="section-header" onclick="toggle('sec-medicaid')">
+      <div class="section-title-row"><div class="section-icon icon-rose">&#127973;</div>
+        <div><div class="section-title">Medicaid</div><div class="section-subtitle">Partially denied — awaiting more information</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-rose">Status Unclear</span><span class="toggle-icon">&#9660;</span></div>
+    </div>
+    <div class="section-body">
+      <div class="status-block rose"><strong>Status:</strong> Denied for most aspects of Medicaid. Agency has also requested additional information. Needs follow-up to clarify what documentation is required and which aspects remain open.</div>
+      <div class="contacts-grid"><div class="contact-card">
+        <div class="contact-name">Charles Newsome</div>
+        <div class="contact-label">Email</div><div class="contact-row">&#9993;&#65039; <a href="mailto:charles.newson@mecklenburgcountync.gov">charles.newson@mecklenburgcountync.gov</a></div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9803146437">980-314-6437</a></div>
+      </div></div>
+      <div id="log-widget-medicaid"></div>
+      <div class="notes-label">Notes <span class="save-indicator" id="save-medicaid">&#10003; Saved</span></div>
+      <textarea class="notes-area" id="notes-medicaid" placeholder="What aspects were denied? What info did they request? Deadlines..." oninput="saveNote('medicaid')" rows="3"></textarea>
+      <div class="notes-label">Documents</div><div id="docs-medicaid"></div>
+      <div class="notes-label">Action Items</div>
+      <ul class="action-list" id="actions-medicaid"></ul>
+      <div class="add-action-row">
+        <input class="add-action-input" id="input-medicaid" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('medicaid')">
+        <button class="add-btn" onclick="addAction('medicaid')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section open" id="sec-medical">
+    <div class="section-header" onclick="toggle('sec-medical')">
+      <div class="section-title-row"><div class="section-icon icon-blue">&#128138;</div>
+        <div><div class="section-title">Medical &amp; Healthcare</div><div class="section-subtitle">Doctors, medications, appointments</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-blue">Appt Tomorrow</span><span class="toggle-icon">&#9660;</span></div>
+    </div>
+    <div class="section-body">
+      <div class="provider-label">Neuropsychology — Carolinas Rehab Hospital</div>
+      <div class="contacts-grid">
+        <div class="contact-card">
+          <div class="contact-name">Dept. of Neuropsychological Services</div>
+          <div class="contact-label">Neurologist</div><div class="contact-row">&#128104;&#8205;&#9877;&#65039; Dr. Ablitz</div>
+          <div class="contact-label">Address</div><div class="contact-row">&#128205; 1100 Blythe Blvd, Charlotte</div>
+          <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7043557328">704-355-7328</a></div>
+          <div class="contact-label">Parking</div><div class="contact-row">&#127359; Orange Parking Lot &middot; Code: 61853#</div>
+          <div class="contact-label">Floor</div><div class="contact-row">&#127970; 2nd Floor</div>
+        </div>
+        <div class="contact-card">
+          <div class="contact-name">Appointments</div>
+          <div class="contact-label">Neurological Work-Up</div><div class="contact-row">&#128197; Completed — April 16, 2026</div>
+          <div class="contact-label" style="margin-top:8px;">Follow-Up (Virtual)</div>
+          <div class="contact-row" style="color:var(--rose);font-weight:600;">&#128197; April 28, 2026 — 11:00 AM</div>
+        </div>
+      </div>
+      <div id="log-widget-medical"></div>
+      <div class="notes-label">Notes <span class="save-indicator" id="save-medical">&#10003; Saved</span></div>
+      <textarea class="notes-area" id="notes-medical" placeholder="Primary doctor, medications, allergies, insurance cards, other specialists..." oninput="saveNote('medical')" rows="4"></textarea>
+      <div class="notes-label">Documents</div><div id="docs-medical"></div>
+      <div class="notes-label">Action Items</div>
+      <ul class="action-list" id="actions-medical"></ul>
+      <div class="add-action-row">
+        <input class="add-action-input" id="input-medical" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('medical')">
+        <button class="add-btn" onclick="addAction('medical')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section open" id="sec-therapy">
+    <div class="section-header" onclick="toggle('sec-therapy')">
+      <div class="section-title-row"><div class="section-icon icon-purple">&#129504;</div>
+        <div><div class="section-title">Therapy &amp; Peer Support</div><div class="section-subtitle">Potential providers — outreach in progress</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">In Progress</span><span class="toggle-icon">&#9660;</span></div>
+    </div>
+    <div class="section-body">
+      <div class="provider-label">Primary Care Solutions</div>
+      <div class="contacts-grid"><div class="contact-card">
+        <div class="contact-name">Primary Care Solutions</div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045371022">+1 (704) 537-1022</a></div>
+        <div class="contact-label">Needs from us</div><div class="contact-row">&#128203; Name, DOB &amp; Medicare #</div>
+      </div></div>
+      <div id="log-widget-pcs"></div>
+      <div class="divider"></div>
+      <div class="provider-label">Monarch</div>
+      <div class="contacts-grid"><div class="contact-card">
+        <div class="contact-name">Monarch</div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8662727826">866-272-7826</a></div>
+        <div class="contact-label">Walk-In Hours</div><div class="contact-row">&#128694; 8–10 AM or 1–2 PM</div>
+        <div class="contact-label">Video Call</div><div class="contact-row">&#128187; 8 AM–2 PM &middot; Call in &middot; First come, first served</div>
+        <div class="contact-label">Availability</div>
+        <div class="contact-row">&#9989; Peer Support available</div>
+        <div class="contact-row" style="color:var(--rose);">&#9888;&#65039; CST currently at capacity</div>
+      </div></div>
+      <div id="log-widget-monarch"></div>
+      <div class="divider"></div>
+      <div class="provider-label">Genesis Project 1, Inc.</div>
+      <div class="contacts-grid"><div class="contact-card">
+        <div class="contact-name">Genesis Project 1, Inc.</div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045960505">+1 (704) 596-0505</a></div>
+      </div></div>
+      <div id="log-widget-genesis"></div>
+      <div class="divider"></div>
+      <div class="provider-label">Carolina Outreach</div>
+      <div class="contacts-grid"><div class="contact-card">
+        <div class="contact-name">Carolina Outreach</div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8448661166">844-866-1166</a></div>
+        <div class="contact-label">Insurance</div><div class="contact-row">&#9989; Accepts Medicare</div>
+      </div></div>
+      <div id="log-widget-carolina"></div>
+      <div class="divider"></div>
+      <div class="provider-label">RHA</div>
+      <div class="contacts-grid"><div class="contact-card">
+        <div class="contact-name">RHA</div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9195189293">919-518-9293</a></div>
+        <div class="contact-label">Insurance</div><div class="contact-row">&#9989; Accepts Medicare</div>
+      </div></div>
+      <div id="log-widget-rha"></div>
+      <div class="divider"></div>
+      <div class="notes-label">Overall Notes <span class="save-indicator" id="save-therapy">&#10003; Saved</span></div>
+      <textarea class="notes-area" id="notes-therapy" placeholder="Overall notes on therapy search, preferences, what Dad is open to..." oninput="saveNote('therapy')" rows="3"></textarea>
+      <div class="notes-label">Documents</div><div id="docs-therapy"></div>
+      <div class="notes-label">Action Items</div>
+      <ul class="action-list" id="actions-therapy"></ul>
+      <div class="add-action-row">
+        <input class="add-action-input" id="input-therapy" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('therapy')">
+        <button class="add-btn" onclick="addAction('therapy')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section open" id="sec-authority">
+    <div class="section-header" onclick="toggle('sec-authority')">
+      <div class="section-title-row"><div class="section-icon icon-purple">&#9878;&#65039;</div>
+        <div><div class="section-title">Care Authority</div><div class="section-subtitle">POAs, Advanced Directive &amp; legal documents</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">In Progress</span><span class="toggle-icon">&#9660;</span></div>
+    </div>
+    <div class="section-body">
+      <div class="provider-label">Medical POA &amp; Advanced Directive</div>
+      <div class="status-block amber"><strong>Status:</strong> Form in hand. Requires either an updated ID (ordered) or a credible witness for the notary before it can be executed.</div>
+      <div class="provider-label">Financial / Durable POA</div>
+      <div class="status-block amber"><strong>Status:</strong> Will need to go through an attorney.</div>
+      <div id="log-widget-authority"></div>
+      <div class="notes-label">Notes <span class="save-indicator" id="save-authority">&#10003; Saved</span></div>
+      <textarea class="notes-area" id="notes-authority" placeholder="Attorney contacts, notary info, witness details, document locations..." oninput="saveNote('authority')" rows="3"></textarea>
+      <div class="notes-label">Documents</div><div id="docs-authority"></div>
+      <div class="notes-label">Action Items</div>
+      <ul class="action-list" id="actions-authority"></ul>
+      <div class="add-action-row">
+        <input class="add-action-input" id="input-authority" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('authority')">
+        <button class="add-btn" onclick="addAction('authority')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="sec-housing">
+    <div class="section-header" onclick="toggle('sec-housing')">
+      <div class="section-title-row"><div class="section-icon icon-sage">&#127968;</div>
+        <div><div class="section-title">Housing &amp; Daily Living</div><div class="section-subtitle">Home care, utilities, transportation</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
+    </div>
+    <div class="section-body">
+      <div id="log-widget-housing"></div>
+      <div class="notes-label">Notes <span class="save-indicator" id="save-housing">&#10003; Saved</span></div>
+      <textarea class="notes-area" id="notes-housing" placeholder="Living situation, home care aides, transportation needs, utility assistance..." oninput="saveNote('housing')" rows="4"></textarea>
+      <div class="notes-label">Documents</div><div id="docs-housing"></div>
+      <div class="notes-label">Action Items</div>
+      <ul class="action-list" id="actions-housing"></ul>
+      <div class="add-action-row">
+        <input class="add-action-input" id="input-housing" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('housing')">
+        <button class="add-btn" onclick="addAction('housing')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="sec-financial">
+    <div class="section-header" onclick="toggle('sec-financial')">
+      <div class="section-title-row"><div class="section-icon icon-amber">&#128176;</div>
+        <div><div class="section-title">Financial &amp; Other Benefits</div><div class="section-subtitle">SSI, Social Security, other assistance</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
+    </div>
+    <div class="section-body">
+      <div id="log-widget-financial"></div>
+      <div class="notes-label">Notes <span class="save-indicator" id="save-financial">&#10003; Saved</span></div>
+      <textarea class="notes-area" id="notes-financial" placeholder="SSI/SSDI status, Social Security income, bills, other benefit programs..." oninput="saveNote('financial')" rows="4"></textarea>
+      <div class="notes-label">Documents</div><div id="docs-financial"></div>
+      <div class="notes-label">Action Items</div>
+      <ul class="action-list" id="actions-financial"></ul>
+      <div class="add-action-row">
+        <input class="add-action-input" id="input-financial" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('financial')">
+        <button class="add-btn" onclick="addAction('financial')">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" id="sec-emergency">
+    <div class="section-header" onclick="toggle('sec-emergency')">
+      <div class="section-title-row"><div class="section-icon icon-rose">&#128680;</div>
+        <div><div class="section-title">Emergency Info &amp; General Notes</div><div class="section-subtitle">Key info in case of emergency</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
+    </div>
+    <div class="section-body">
+      <div id="log-widget-emergency"></div>
+      <div class="notes-label">Notes <span class="save-indicator" id="save-emergency">&#10003; Saved</span></div>
+      <textarea class="notes-area" id="notes-emergency" placeholder="Emergency contacts, hospital preference, advance directives, POA info, document locations..." oninput="saveNote('emergency')" rows="4"></textarea>
+      <div class="notes-label">Documents</div><div id="docs-emergency"></div>
+      <div class="notes-label">Action Items</div>
+      <ul class="action-list" id="actions-emergency"></ul>
+      <div class="add-action-row">
+        <input class="add-action-input" id="input-emergency" placeholder="Add a to-do..." onkeydown="if(event.key==='Enter') addAction('emergency')">
+        <button class="add-btn" onclick="addAction('emergency')">+ Add</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDIKTCcHBgjfQzX4EqlGCN1Q4ggMP5jZ6U",
+  authDomain: "dad-care-dashboard.firebaseapp.com",
+  projectId: "dad-care-dashboard",
+  storageBucket: "dad-care-dashboard.firebasestorage.app",
+  messagingSenderId: "698962683242",
+  appId: "1:698962683242:web:e6ca08e5dc133ff68b7113"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const CORRECT_PASSWORD = 'BuddyBoy120689!';
+const DOC_REF = doc(db, 'dashboard', 'main');
+
+// Auth
+window.toggleAuthVis = function() {
+  const i = document.getElementById('authInput');
+  i.type = i.type === 'password' ? 'text' : 'password';
+};
+window.authSubmit = function() {
+  const val = document.getElementById('authInput').value;
+  if (val === CORRECT_PASSWORD) {
+    document.getElementById('authOverlay').classList.add('hidden');
+    initApp();
+  } else {
+    const err = document.getElementById('authError');
+    err.textContent = 'Incorrect password. Try again.';
+    document.getElementById('authInput').value = '';
+    setTimeout(() => err.textContent = '', 2000);
+  }
+};
+
+// Banner
+function showBanner(msg, isError) {
+  const b = document.getElementById('syncBanner');
+  b.textContent = msg; b.className = 'sync-banner show' + (isError ? ' error' : '');
+  setTimeout(() => b.className = 'sync-banner', 2500);
+}
+
+// State
+let state = { notes:{}, actions:{}, logs:{}, appts:[], docs:{} };
+let saving = false, pendingSave = false;
+
+const noteSections = ['social','snap','medicaid','medical','therapy','authority','housing','financial','emergency'];
+const logKeys = ['social','snap','medicaid','medical','pcs','monarch','genesis','carolina','rha','authority','housing','financial','emergency'];
+const docSections = ['social','snap','medicaid','medical','therapy','authority','housing','financial','emergency'];
+const logTitles = {
+  social:'Social Worker — Contact Log',snap:'SNAP / EBT — Contact Log',medicaid:'Medicaid — Contact Log',
+  medical:'Medical — Contact Log',pcs:'Primary Care Solutions — Contact Log',monarch:'Monarch — Contact Log',
+  genesis:'Genesis Project 1 — Contact Log',carolina:'Carolina Outreach — Contact Log',rha:'RHA — Contact Log',
+  authority:'Care Authority — Log',housing:'Housing — Log',financial:'Financial — Log',emergency:'Emergency — Log'
+};
+const seedLogs = {
+  pcs:[{date:'4/15',text:'Sent message via web app'},{date:'4/15',text:'Received call back — they need: Name, DOB and Medicare #'}],
+  monarch:[{date:'4/15',text:'Called; received call back from rep'}],
+  genesis:[{date:'4/15',text:'Sent message via web app'},{date:'4/15',text:'Received call back — will call again next day'}],
+  carolina:[{date:'4/15',text:'Called and left voicemail'}]
+};
+const seedAppts = [
+  {date:'4/16/2026',provider:'Dr. Ablitz — Carolinas Rehab',purpose:'Neurological work-up',type:'past'},
+  {date:'4/28/2026 · 11:00 AM',provider:'Dr. Ablitz — Neuropsychology',purpose:'Follow-up virtual visit',type:'virtual'}
+];
+
+async function saveToFirestore() {
+  if (saving) { pendingSave = true; return; }
+  saving = true;
+  try { await setDoc(DOC_REF, state); updateTimestamp(); }
+  catch(e) { showBanner('Save failed — check connection', true); }
+  saving = false;
+  if (pendingSave) { pendingSave = false; saveToFirestore(); }
+}
+
+async function initApp() {
+  showBanner('Loading your dashboard...');
+  try {
+    const snap = await getDoc(DOC_REF);
+    if (snap.exists()) {
+      const d = snap.data();
+      state.notes = d.notes||{}; state.actions = d.actions||{};
+      state.logs = d.logs||{}; state.appts = d.appts||seedAppts; state.docs = d.docs||{};
+      logKeys.forEach(k => { if (!state.logs[k] && seedLogs[k]) state.logs[k] = seedLogs[k]; });
+    } else {
+      logKeys.forEach(k => { if (seedLogs[k]) state.logs[k] = seedLogs[k]; });
+      state.appts = seedAppts;
+      await saveToFirestore();
+    }
+  } catch(e) {
+    showBanner('Could not connect — working offline', true);
+    logKeys.forEach(k => { if (seedLogs[k]) state.logs[k] = seedLogs[k]; });
+    state.appts = seedAppts;
+  }
+  renderAll();
+  showBanner('Dashboard loaded');
+  onSnapshot(DOC_REF, (snap) => {
+    if (!snap.exists() || saving) return;
+    const d = snap.data();
+    state.notes=d.notes||{}; state.actions=d.actions||{};
+    state.logs=d.logs||{}; state.appts=d.appts||[]; state.docs=d.docs||{};
+    renderAll(); showBanner('Updated from another device');
+  });
+}
+
+function renderAll() {
+  noteSections.forEach(k => { const el=document.getElementById('notes-'+k); if(el&&state.notes[k]!==undefined) el.value=state.notes[k]; renderActions(k); });
+  logKeys.forEach(k => renderLog(k));
+  docSections.forEach(k => renderDocs(k));
+  renderAppts();
+}
+
+function todayStr() { const d=new Date(); return (d.getMonth()+1)+'/'+d.getDate(); }
+function updateTimestamp() {
+  const now=new Date();
+  document.getElementById('lastUpdated').textContent='Last updated: '+now.toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric',hour:'2-digit',minute:'2-digit'});
+}
+window.toggle = id => document.getElementById(id).classList.toggle('open');
+window.expandAll = () => document.querySelectorAll('.section').forEach(s=>s.classList.add('open'));
+
+window.saveNote = function(key) {
+  if(!state.notes) state.notes={};
+  state.notes[key]=document.getElementById('notes-'+key).value;
+  const ind=document.getElementById('save-'+key);
+  ind.classList.add('show'); setTimeout(()=>ind.classList.remove('show'),1500);
+  saveToFirestore();
+};
+
+window.addAction = function(key) {
+  const inp=document.getElementById('input-'+key); const text=inp.value.trim(); if(!text) return;
+  if(!state.actions[key]) state.actions[key]=[];
+  state.actions[key].push({text,done:false});
+  saveToFirestore(); renderActions(key); inp.value='';
+};
+function toggleAction(key,idx) { state.actions[key][idx].done=!state.actions[key][idx].done; saveToFirestore(); renderActions(key); }
+function renderActions(key) {
+  const ul=document.getElementById('actions-'+key); if(!ul) return; ul.innerHTML='';
+  (state.actions[key]||[]).forEach((item,i)=>{
+    const li=document.createElement('li');
+    const chk=document.createElement('div'); chk.className='action-check'+(item.done?' checked':''); chk.onclick=()=>toggleAction(key,i);
+    const sp=document.createElement('span'); sp.className='action-text'+(item.done?' done':''); sp.textContent=item.text;
+    li.appendChild(chk); li.appendChild(sp); ul.appendChild(li);
+  });
+}
+
+window.addLogEntry = function(key) {
+  const dEl=document.getElementById('logdate-'+key); const tEl=document.getElementById('logtext-'+key);
+  const d=dEl.value.trim(),t=tEl.value.trim(); if(!t) return;
+  if(!state.logs[key]) state.logs[key]=[];
+  state.logs[key].push({date:d||todayStr(),text:t});
+  saveToFirestore(); renderLog(key); dEl.value=''; tEl.value='';
+};
+function deleteLogEntry(key,idx) { state.logs[key].splice(idx,1); saveToFirestore(); renderLog(key); }
+function renderLog(key) {
+  const container=document.getElementById('log-widget-'+key); if(!container) return; container.innerHTML='';
+  const widget=document.createElement('div'); widget.className='log-widget';
+  const title=document.createElement('div'); title.className='log-widget-title'; title.textContent=logTitles[key]||'Contact Log'; widget.appendChild(title);
+  const ul=document.createElement('ul'); ul.className='log-entries';
+  const entries=state.logs[key]||[];
+  if(!entries.length){ const e=document.createElement('li'); e.style.cssText='font-size:0.82rem;color:#bbb;padding:4px 0;'; e.textContent='No entries yet.'; ul.appendChild(e); }
+  entries.forEach((entry,i)=>{
+    const li=document.createElement('li'); li.className='log-entry';
+    const dateEl=document.createElement('span'); dateEl.className='log-date'; dateEl.contentEditable='true'; dateEl.textContent=entry.date;
+    dateEl.oninput=()=>{entry.date=dateEl.textContent.trim();saveToFirestore();};
+    const textEl=document.createElement('span'); textEl.className='log-text'; textEl.contentEditable='true'; textEl.textContent=entry.text;
+    textEl.oninput=()=>{entry.text=textEl.textContent.trim();saveToFirestore();};
+    const del=document.createElement('button'); del.className='log-delete'; del.textContent='✕'; del.onclick=()=>deleteLogEntry(key,i);
+    li.appendChild(dateEl); li.appendChild(textEl); li.appendChild(del); ul.appendChild(li);
+  });
+  widget.appendChild(ul);
+  const addRow=document.createElement('div'); addRow.className='log-add-row';
+  const dInp=document.createElement('input'); dInp.className='log-date-input'; dInp.id='logdate-'+key; dInp.placeholder=todayStr();
+  dInp.onkeydown=e=>{if(e.key==='Enter') window.addLogEntry(key);};
+  const tInp=document.createElement('input'); tInp.className='log-text-input'; tInp.id='logtext-'+key; tInp.placeholder='Add log entry...';
+  tInp.onkeydown=e=>{if(e.key==='Enter') window.addLogEntry(key);};
+  const btn=document.createElement('button'); btn.className='log-add-btn'; btn.textContent='+ Log'; btn.onclick=()=>window.addLogEntry(key);
+  addRow.appendChild(dInp); addRow.appendChild(tInp); addRow.appendChild(btn); widget.appendChild(addRow); container.appendChild(widget);
+}
+
+window.addDoc = function(key) {
+  const lEl=document.getElementById('doclabel-'+key); const uEl=document.getElementById('docurl-'+key);
+  const label=lEl.value.trim(),url=uEl.value.trim(); if(!url) return;
+  if(!state.docs[key]) state.docs[key]=[];
+  state.docs[key].push({label:label||'Document',url});
+  saveToFirestore(); renderDocs(key); lEl.value=''; uEl.value='';
+};
+function deleteDoc(key,idx) { state.docs[key].splice(idx,1); saveToFirestore(); renderDocs(key); }
+function renderDocs(key) {
+  const container=document.getElementById('docs-'+key); if(!container) return; container.innerHTML='';
+  const docs=state.docs[key]||[];
+  if(docs.length){
+    const ul=document.createElement('ul'); ul.className='doc-list';
+    docs.forEach((d,i)=>{
+      const li=document.createElement('li'); li.className='doc-entry';
+      const icon=document.createElement('span'); icon.textContent='📄'; icon.style.fontSize='1rem';
+      const a=document.createElement('a'); a.className='doc-link'; a.href=d.url; a.target='_blank'; a.rel='noopener noreferrer'; a.textContent=d.label;
+      const del=document.createElement('button'); del.className='log-delete'; del.textContent='✕'; del.onclick=()=>deleteDoc(key,i);
+      li.appendChild(icon); li.appendChild(a); li.appendChild(del); ul.appendChild(li);
+    });
+    container.appendChild(ul);
+  } else {
+    const p=document.createElement('p'); p.className='doc-empty'; p.textContent='No documents yet — paste a Google Drive link below.'; container.appendChild(p);
+  }
+  const addRow=document.createElement('div'); addRow.className='doc-add-row';
+  const lInp=document.createElement('input'); lInp.className='doc-input'; lInp.id='doclabel-'+key; lInp.placeholder='Label (e.g. Medical POA)';
+  const uInp=document.createElement('input'); uInp.className='doc-input'; uInp.id='docurl-'+key; uInp.placeholder='Paste Google Drive link...';
+  uInp.onkeydown=e=>{if(e.key==='Enter') window.addDoc(key);};
+  const btn=document.createElement('button'); btn.className='doc-add-btn'; btn.textContent='+ Add Link'; btn.onclick=()=>window.addDoc(key);
+  addRow.appendChild(lInp); addRow.appendChild(uInp); addRow.appendChild(btn); container.appendChild(addRow);
+}
+
+window.addAppt = function() {
+  const date=document.getElementById('appt-date').value.trim();
+  const provider=document.getElementById('appt-provider').value.trim();
+  const purpose=document.getElementById('appt-purpose').value.trim();
+  const type=document.getElementById('appt-type').value;
+  if(!date||!provider) return;
+  state.appts.push({date,provider,purpose,type});
+  saveToFirestore(); renderAppts();
+  ['appt-date','appt-provider','appt-purpose'].forEach(id=>document.getElementById(id).value='');
+};
+window.deleteAppt = function(idx) { state.appts.splice(idx,1); saveToFirestore(); renderAppts(); };
+function renderAppts() {
+  const tbody=document.getElementById('appt-tbody'); tbody.innerHTML='';
+  const tagMap={virtual:'tag-virtual',inperson:'tag-inperson',phone:'tag-phone',past:'tag-past'};
+  const labelMap={virtual:'Virtual',inperson:'In-Person',phone:'Phone',past:'Past'};
+  (state.appts||[]).forEach((a,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="${a.type==='past'?'appt-past':'appt-upcoming'}">${a.date}</td><td style="font-weight:500">${a.provider}</td><td style="color:var(--slate-light)">${a.purpose||'—'}</td><td><span class="appt-tag ${tagMap[a.type]||'tag-past'}">${labelMap[a.type]||a.type}</span></td><td><button class="log-delete" onclick="deleteAppt(${i})">✕</button></td>`;
+    tbody.appendChild(tr);
+  });
+  const upcoming=(state.appts||[]).filter(a=>a.type!=='past').length;
+  const badge=document.getElementById('appt-badge');
+  badge.textContent=upcoming===0?'None Upcoming':upcoming+' Upcoming';
+  badge.className='section-badge '+(upcoming>0?'badge-blue':'badge-gray');
+}
+</script>
+</body>
+</html>
