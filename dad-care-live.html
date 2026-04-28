@@ -63,10 +63,10 @@
   /* EDIT MODE */
   .edit-hint{display:none;font-size:0.78rem;color:var(--sage);font-style:italic;margin-bottom:16px;padding:8px 12px;background:var(--sage-pale);border-radius:8px;border:1px solid var(--sage-light);}
   body.edit-mode .edit-hint{display:block;}
-  body.edit-mode e{cursor:text;border-bottom:1.5px dashed var(--sage-light);padding-bottom:1px;}
-  body.edit-mode e:hover{background:rgba(124,158,138,0.1);}
-  body.edit-mode e:focus{outline:none;background:rgba(124,158,138,0.15);border-bottom-color:var(--sage);}
-  body:not(.edit-mode) e{pointer-events:none;}
+  body.edit-mode .ed{cursor:text;border-bottom:1.5px dashed var(--sage-light);padding-bottom:1px;}
+  body.edit-mode .ed:hover{background:rgba(124,158,138,0.1);}
+  body.edit-mode .ed:focus{outline:none;background:rgba(124,158,138,0.15);border-bottom-color:var(--sage);}
+  body:not(.edit-mode) .ed{pointer-events:none;}
   body.edit-mode .contact-row a{pointer-events:none;color:var(--sage);}
   body:not(.edit-mode) .contact-row a{pointer-events:auto;}
   body.edit-mode .action-del{display:inline-flex !important;}
@@ -267,7 +267,7 @@
     <h1>Dad's Care Coordination</h1>
     <p>Benefits, services &amp; support — all in one place</p>
     <div class="last-updated" id="lastUpdated">Last updated: April 28, 2026</div>
-    <div class="version-tag">v6</div>
+    <div class="version-tag">v7</div>
   </div>
 </div>
 
@@ -349,15 +349,15 @@
   <div class="section open" id="sec-social">
     <div class="section-header" onclick="toggle('sec-social')">
       <div class="section-title-row"><div class="section-icon icon-sage">&#129309;</div>
-        <div><div class="section-title">Social Worker</div><div class="section-subtitle"><e>Primary care coordinator</e></div></div>
+        <div><div class="section-title">Social Worker</div><div class="section-subtitle"><span class="ed">Primary care coordinator</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-green">Active</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><e>Ms. Robinson</e></div>
-        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17042087622"><e>+1 (704) 208-7622</e></a></div>
-        <div class="contact-label">Email</div><div class="contact-row">&#9993; <a href="mailto:Yaisha.Robinson@mecklenburgcountync.gov"><e>Yaisha.Robinson@mecklenburgcountync.gov</e></a></div>
+        <div class="contact-name"><span class="ed">Ms. Robinson</span></div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17042087622"><span class="ed">+1 (704) 208-7622</span></a></div>
+        <div class="contact-label">Email</div><div class="contact-row">&#9993; <a href="mailto:Yaisha.Robinson@mecklenburgcountync.gov"><span class="ed">Yaisha.Robinson@mecklenburgcountync.gov</span></a></div>
       </div></div>
       <div class="subsection" id="subsec-log-social">
         <div class="subsection-header" onclick="toggleSub('log-social')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
@@ -391,15 +391,15 @@
   <div class="section open" id="sec-snap">
     <div class="section-header" onclick="toggle('sec-snap')">
       <div class="section-title-row"><div class="section-icon icon-amber">&#128717;</div>
-        <div><div class="section-title">SNAP / EBT (Food Stamps)</div><div class="section-subtitle"><e>Approved — EBT card not yet received</e></div></div>
+        <div><div class="section-title">SNAP / EBT (Food Stamps)</div><div class="section-subtitle"><span class="ed">Approved — EBT card not yet received</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">Card Pending</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="status-block amber"><strong>Status:</strong> <e>Approved for SNAP. EBT card has not arrived. Follow up to request replacement or confirm mailing address on file.</e></div>
+      <div class="status-block amber"><strong>Status:</strong> <span class="ed">Approved for SNAP. EBT card has not arrived. Follow up to request replacement or confirm mailing address on file.</span></div>
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><e>SNAP / EBT State Hotline</e></div>
-        <div class="contact-label">Phone (card issues)</div><div class="contact-row">&#128222; <a href="tel:8886227328"><e>888-622-7328</e></a></div>
+        <div class="contact-name"><span class="ed">SNAP / EBT State Hotline</span></div>
+        <div class="contact-label">Phone (card issues)</div><div class="contact-row">&#128222; <a href="tel:8886227328"><span class="ed">888-622-7328</span></a></div>
       </div></div>
       <div class="subsection" id="subsec-log-snap">
         <div class="subsection-header" onclick="toggleSub('log-snap')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
@@ -433,16 +433,16 @@
   <div class="section open" id="sec-medicaid">
     <div class="section-header" onclick="toggle('sec-medicaid')">
       <div class="section-title-row"><div class="section-icon icon-rose">&#127973;</div>
-        <div><div class="section-title">Medicaid</div><div class="section-subtitle"><e>Partially denied — awaiting more information</e></div></div>
+        <div><div class="section-title">Medicaid</div><div class="section-subtitle"><span class="ed">Partially denied — awaiting more information</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-rose">Status Unclear</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="status-block rose"><strong>Status:</strong> <e>Denied for most aspects of Medicaid. Agency has also requested additional information. Needs follow-up to clarify what documentation is required and which aspects remain open.</e></div>
+      <div class="status-block rose"><strong>Status:</strong> <span class="ed">Denied for most aspects of Medicaid. Agency has also requested additional information. Needs follow-up to clarify what documentation is required and which aspects remain open.</span></div>
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><e>Charles Newsome</e></div>
-        <div class="contact-label">Email</div><div class="contact-row">&#9993; <a href="mailto:charles.newson@mecklenburgcountync.gov"><e>charles.newson@mecklenburgcountync.gov</e></a></div>
-        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9803146437"><e>980-314-6437</e></a></div>
+        <div class="contact-name"><span class="ed">Charles Newsome</span></div>
+        <div class="contact-label">Email</div><div class="contact-row">&#9993; <a href="mailto:charles.newson@mecklenburgcountync.gov"><span class="ed">charles.newson@mecklenburgcountync.gov</span></a></div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9803146437"><span class="ed">980-314-6437</span></a></div>
       </div></div>
       <div class="subsection" id="subsec-log-medicaid">
         <div class="subsection-header" onclick="toggleSub('log-medicaid')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
@@ -476,46 +476,46 @@
   <div class="section open" id="sec-medical">
     <div class="section-header" onclick="toggle('sec-medical')">
       <div class="section-title-row"><div class="section-icon icon-blue">&#128138;</div>
-        <div><div class="section-title">Medical &amp; Healthcare</div><div class="section-subtitle"><e>Doctors, medications, appointments</e></div></div>
+        <div><div class="section-title">Medical &amp; Healthcare</div><div class="section-subtitle"><span class="ed">Doctors, medications, appointments</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-blue">Appt Tomorrow</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="provider-label"><e>Neuropsychology — Carolinas Rehab Hospital</e></div>
+      <div class="provider-label"><span class="ed">Neuropsychology — Carolinas Rehab Hospital</span></div>
       <div class="contacts-grid">
         <div class="contact-card">
-          <div class="contact-name"><e>Dept. of Neuropsychological Services</e></div>
-          <div class="contact-label">Neurologist</div><div class="contact-row">&#128104;&#8205;&#9877; <e>Dr. Ablitz</e></div>
-          <div class="contact-label">Address</div><div class="contact-row">&#128205; <e>1100 Blythe Blvd, Charlotte</e></div>
-          <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7043557328"><e>704-355-7328</e></a></div>
-          <div class="contact-label">Parking</div><div class="contact-row">&#127359; <e>Orange Parking Lot &middot; Code: 61853#</e></div>
-          <div class="contact-label">Floor</div><div class="contact-row">&#127970; <e>2nd Floor</e></div>
+          <div class="contact-name"><span class="ed">Dept. of Neuropsychological Services</span></div>
+          <div class="contact-label">Neurologist</div><div class="contact-row">&#128104;&#8205;&#9877; <span class="ed">Dr. Ablitz</span></div>
+          <div class="contact-label">Address</div><div class="contact-row">&#128205; <span class="ed">1100 Blythe Blvd, Charlotte</span></div>
+          <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7043557328"><span class="ed">704-355-7328</span></a></div>
+          <div class="contact-label">Parking</div><div class="contact-row">&#127359; <span class="ed">Orange Parking Lot &middot; Code: 61853#</span></div>
+          <div class="contact-label">Floor</div><div class="contact-row">&#127970; <span class="ed">2nd Floor</span></div>
         </div>
         <div class="contact-card">
           <div class="contact-name">Appointments</div>
-          <div class="contact-label">Neurological Work-Up</div><div class="contact-row">&#128197; <e>Completed — April 16, 2026</e></div>
+          <div class="contact-label">Neurological Work-Up</div><div class="contact-row">&#128197; <span class="ed">Completed — April 16, 2026</span></div>
           <div class="contact-label" style="margin-top:8px;">Follow-Up (Virtual)</div>
-          <div class="contact-row" style="color:var(--rose);font-weight:600;">&#128197; <e>April 28, 2026 — 11:00 AM</e></div>
+          <div class="contact-row" style="color:var(--rose);font-weight:600;">&#128197; <span class="ed">April 28, 2026 — 11:00 AM</span></div>
         </div>
       </div>
       <div class="divider"></div>
-      <div class="provider-label"><e>Primary Care</e></div>
+      <div class="provider-label"><span class="ed">Primary Care</span></div>
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><e>Lawrence Moffat, MD</e></div>
-        <div class="contact-label">Practice</div><div class="contact-row">&#127968; <e>Mecklenburg Medical Group</e></div>
-        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7043555100"><e>704-355-5100</e></a></div>
+        <div class="contact-name"><span class="ed">Lawrence Moffat, MD</span></div>
+        <div class="contact-label">Practice</div><div class="contact-row">&#127968; <span class="ed">Mecklenburg Medical Group</span></div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7043555100"><span class="ed">704-355-5100</span></a></div>
       </div></div>
       <div class="divider"></div>
-      <div class="provider-label"><e>Possible New Primary Care</e></div>
+      <div class="provider-label"><span class="ed">Possible New Primary Care</span></div>
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><e>Carolina Family Healthcare</e></div>
-        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7048474000"><e>704-847-4000</e></a></div>
+        <div class="contact-name"><span class="ed">Carolina Family Healthcare</span></div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7048474000"><span class="ed">704-847-4000</span></a></div>
       </div></div>
       <div class="divider"></div>
-      <div class="provider-label"><e>Possible Sleep Doctor</e></div>
+      <div class="provider-label"><span class="ed">Possible Sleep Doctor</span></div>
       <div class="contacts-grid"><div class="contact-card">
-        <div class="contact-name"><e>Ballantyne Sleep Diagnostic</e></div>
-        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7049435075"><e>704-943-5075</e></a></div>
+        <div class="contact-name"><span class="ed">Ballantyne Sleep Diagnostic</span></div>
+        <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:7049435075"><span class="ed">704-943-5075</span></a></div>
       </div></div>
       <div class="divider"></div>
       <div class="subsection" id="subsec-log-medical">
@@ -550,86 +550,121 @@
   <div class="section open" id="sec-therapy">
     <div class="section-header" onclick="toggle('sec-therapy')">
       <div class="section-title-row"><div class="section-icon icon-purple">&#129504;</div>
-        <div><div class="section-title">Therapy &amp; Peer Support</div><div class="section-subtitle"><e>Potential providers — outreach in progress</e></div></div>
+        <div><div class="section-title">Therapy &amp; Peer Support</div><div class="section-subtitle"><span class="ed">Potential providers — outreach in progress</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">In Progress</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
 
       <div class="subsection open" id="subsec-pcs">
-        <div class="subsection-header" onclick="toggleSub('pcs')"><span class="subsection-title"><e>Primary Care Solutions</e></span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-header" onclick="toggleSub('pcs')"><span class="subsection-title"><span class="ed">Primary Care Solutions</span></span><span class="subsection-toggle">&#9660;</span></div>
         <div class="subsection-body">
           <div class="contacts-grid"><div class="contact-card">
-            <div class="contact-name"><e>Primary Care Solutions</e></div>
-            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045371022"><e>+1 (704) 537-1022</e></a></div>
-            <div class="contact-label">Needs from us</div><div class="contact-row">&#128203; <e>Name, DOB &amp; Medicare #</e></div>
+            <div class="contact-name"><span class="ed">Primary Care Solutions</span></div>
+            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045371022"><span class="ed">+1 (704) 537-1022</span></a></div>
+            <div class="contact-label">Needs from us</div><div class="contact-row">&#128203; <span class="ed">Name, DOB &amp; Medicare #</span></div>
           </div></div>
           <div class="subsection" id="subsec-log-pcs">
             <div class="subsection-header" onclick="toggleSub('log-pcs')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
             <div class="subsection-body"><div id="log-widget-pcs"></div></div>
           </div>
+          <div class="notes-toggle" id="notes-toggle-pcs" onclick="toggleNotes('pcs')">
+            <span class="notes-toggle-label">Notes</span>
+            <div class="notes-toggle-right"><span class="notes-save" id="save-pcs">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+          </div>
+          <div class="notes-collapse" id="notes-collapse-pcs">
+            <textarea class="notes-area" id="notes-pcs" placeholder="Primary Care Solutions notes, next steps..." oninput="saveNote('pcs')" rows="2"></textarea>
+          </div>
         </div>
       </div>
 
       <div class="subsection open" id="subsec-monarch">
-        <div class="subsection-header" onclick="toggleSub('monarch')"><span class="subsection-title"><e>Monarch</e></span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-header" onclick="toggleSub('monarch')"><span class="subsection-title"><span class="ed">Monarch</span></span><span class="subsection-toggle">&#9660;</span></div>
         <div class="subsection-body">
           <div class="contacts-grid"><div class="contact-card">
-            <div class="contact-name"><e>Monarch</e></div>
-            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8662727826"><e>866-272-7826</e></a></div>
-            <div class="contact-label">Walk-In Hours</div><div class="contact-row">&#128694; <e>8–10 AM or 1–2 PM</e></div>
-            <div class="contact-label">Video Call</div><div class="contact-row">&#128187; <e>8 AM–2 PM &middot; Call in &middot; First come, first served</e></div>
+            <div class="contact-name"><span class="ed">Monarch</span></div>
+            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8662727826"><span class="ed">866-272-7826</span></a></div>
+            <div class="contact-label">Walk-In Hours</div><div class="contact-row">&#128694; <span class="ed">8–10 AM or 1–2 PM</span></div>
+            <div class="contact-label">Video Call</div><div class="contact-row">&#128187; <span class="ed">8 AM–2 PM &middot; Call in &middot; First come, first served</span></div>
             <div class="contact-label">Availability</div>
-            <div class="contact-row">&#9989; <e>Peer Support available</e></div>
-            <div class="contact-row" style="color:var(--rose);">&#9888; <e>CST currently at capacity</e></div>
+            <div class="contact-row">&#9989; <span class="ed">Peer Support available</span></div>
+            <div class="contact-row" style="color:var(--rose);">&#9888; <span class="ed">CST currently at capacity</span></div>
           </div></div>
           <div class="subsection" id="subsec-log-monarch">
             <div class="subsection-header" onclick="toggleSub('log-monarch')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
             <div class="subsection-body"><div id="log-widget-monarch"></div></div>
           </div>
+          <div class="notes-toggle" id="notes-toggle-monarch" onclick="toggleNotes('monarch')">
+            <span class="notes-toggle-label">Notes</span>
+            <div class="notes-toggle-right"><span class="notes-save" id="save-monarch">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+          </div>
+          <div class="notes-collapse" id="notes-collapse-monarch">
+            <textarea class="notes-area" id="notes-monarch" placeholder="Monarch notes, scheduling, availability updates..." oninput="saveNote('monarch')" rows="2"></textarea>
+          </div>
         </div>
       </div>
 
       <div class="subsection open" id="subsec-genesis">
-        <div class="subsection-header" onclick="toggleSub('genesis')"><span class="subsection-title"><e>Genesis Project 1, Inc.</e></span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-header" onclick="toggleSub('genesis')"><span class="subsection-title"><span class="ed">Genesis Project 1, Inc.</span></span><span class="subsection-toggle">&#9660;</span></div>
         <div class="subsection-body">
           <div class="contacts-grid"><div class="contact-card">
-            <div class="contact-name"><e>Genesis Project 1, Inc.</e></div>
-            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045960505"><e>+1 (704) 596-0505</e></a></div>
+            <div class="contact-name"><span class="ed">Genesis Project 1, Inc.</span></div>
+            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:+17045960505"><span class="ed">+1 (704) 596-0505</span></a></div>
           </div></div>
           <div class="subsection" id="subsec-log-genesis">
             <div class="subsection-header" onclick="toggleSub('log-genesis')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
             <div class="subsection-body"><div id="log-widget-genesis"></div></div>
           </div>
+          <div class="notes-toggle" id="notes-toggle-genesis" onclick="toggleNotes('genesis')">
+            <span class="notes-toggle-label">Notes</span>
+            <div class="notes-toggle-right"><span class="notes-save" id="save-genesis">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+          </div>
+          <div class="notes-collapse" id="notes-collapse-genesis">
+            <textarea class="notes-area" id="notes-genesis" placeholder="Genesis Project 1 notes, follow-up details..." oninput="saveNote('genesis')" rows="2"></textarea>
+          </div>
         </div>
       </div>
 
       <div class="subsection open" id="subsec-carolina">
-        <div class="subsection-header" onclick="toggleSub('carolina')"><span class="subsection-title"><e>Carolina Outreach</e></span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-header" onclick="toggleSub('carolina')"><span class="subsection-title"><span class="ed">Carolina Outreach</span></span><span class="subsection-toggle">&#9660;</span></div>
         <div class="subsection-body">
           <div class="contacts-grid"><div class="contact-card">
-            <div class="contact-name"><e>Carolina Outreach</e></div>
-            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8448661166"><e>844-866-1166</e></a></div>
-            <div class="contact-label">Insurance</div><div class="contact-row">&#9989; <e>Accepts Medicare</e></div>
+            <div class="contact-name"><span class="ed">Carolina Outreach</span></div>
+            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:8448661166"><span class="ed">844-866-1166</span></a></div>
+            <div class="contact-label">Insurance</div><div class="contact-row">&#9989; <span class="ed">Accepts Medicare</span></div>
           </div></div>
           <div class="subsection" id="subsec-log-carolina">
             <div class="subsection-header" onclick="toggleSub('log-carolina')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
             <div class="subsection-body"><div id="log-widget-carolina"></div></div>
           </div>
+          <div class="notes-toggle" id="notes-toggle-carolina" onclick="toggleNotes('carolina')">
+            <span class="notes-toggle-label">Notes</span>
+            <div class="notes-toggle-right"><span class="notes-save" id="save-carolina">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+          </div>
+          <div class="notes-collapse" id="notes-collapse-carolina">
+            <textarea class="notes-area" id="notes-carolina" placeholder="Carolina Outreach notes, callback info..." oninput="saveNote('carolina')" rows="2"></textarea>
+          </div>
         </div>
       </div>
 
       <div class="subsection open" id="subsec-rha">
-        <div class="subsection-header" onclick="toggleSub('rha')"><span class="subsection-title"><e>RHA</e></span><span class="subsection-toggle">&#9660;</span></div>
+        <div class="subsection-header" onclick="toggleSub('rha')"><span class="subsection-title"><span class="ed">RHA</span></span><span class="subsection-toggle">&#9660;</span></div>
         <div class="subsection-body">
           <div class="contacts-grid"><div class="contact-card">
-            <div class="contact-name"><e>RHA</e></div>
-            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9195189293"><e>919-518-9293</e></a></div>
-            <div class="contact-label">Insurance</div><div class="contact-row">&#9989; <e>Accepts Medicare</e></div>
+            <div class="contact-name"><span class="ed">RHA</span></div>
+            <div class="contact-label">Phone</div><div class="contact-row">&#128222; <a href="tel:9195189293"><span class="ed">919-518-9293</span></a></div>
+            <div class="contact-label">Insurance</div><div class="contact-row">&#9989; <span class="ed">Accepts Medicare</span></div>
           </div></div>
           <div class="subsection" id="subsec-log-rha">
             <div class="subsection-header" onclick="toggleSub('log-rha')"><span class="subsection-title">&#128203; Contact Log</span><span class="subsection-toggle">&#9660;</span></div>
             <div class="subsection-body"><div id="log-widget-rha"></div></div>
+          </div>
+          <div class="notes-toggle" id="notes-toggle-rha" onclick="toggleNotes('rha')">
+            <span class="notes-toggle-label">Notes</span>
+            <div class="notes-toggle-right"><span class="notes-save" id="save-rha">&#10003; Saved</span><span class="notes-toggle-icon">&#9660;</span></div>
+          </div>
+          <div class="notes-collapse" id="notes-collapse-rha">
+            <textarea class="notes-area" id="notes-rha" placeholder="RHA notes, intake process, availability..." oninput="saveNote('rha')" rows="2"></textarea>
           </div>
         </div>
       </div>
@@ -662,15 +697,15 @@
   <div class="section open" id="sec-authority">
     <div class="section-header" onclick="toggle('sec-authority')">
       <div class="section-title-row"><div class="section-icon icon-purple">&#9878;</div>
-        <div><div class="section-title">Care Authority</div><div class="section-subtitle"><e>POAs, Advanced Directive &amp; legal documents</e></div></div>
+        <div><div class="section-title">Care Authority</div><div class="section-subtitle"><span class="ed">POAs, Advanced Directive &amp; legal documents</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-amber">In Progress</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
-      <div class="provider-label"><e>Medical POA &amp; Advanced Directive</e></div>
-      <div class="status-block amber"><strong>Status:</strong> <e>Form in hand. Requires either an updated ID (ordered) or a credible witness for the notary before it can be executed.</e></div>
-      <div class="provider-label"><e>Financial / Durable POA</e></div>
-      <div class="status-block amber"><strong>Status:</strong> <e>Will need to go through an attorney.</e></div>
+      <div class="provider-label"><span class="ed">Medical POA &amp; Advanced Directive</span></div>
+      <div class="status-block amber"><strong>Status:</strong> <span class="ed">Form in hand. Requires either an updated ID (ordered) or a credible witness for the notary before it can be executed.</span></div>
+      <div class="provider-label"><span class="ed">Financial / Durable POA</span></div>
+      <div class="status-block amber"><strong>Status:</strong> <span class="ed">Will need to go through an attorney.</span></div>
       <div class="subsection" id="subsec-log-authority">
         <div class="subsection-header" onclick="toggleSub('log-authority')"><span class="subsection-title">&#128203; Log</span><span class="subsection-toggle">&#9660;</span></div>
         <div class="subsection-body"><div id="log-widget-authority"></div></div>
@@ -703,11 +738,17 @@
   <div class="section" id="sec-housing">
     <div class="section-header" onclick="toggle('sec-housing')">
       <div class="section-title-row"><div class="section-icon icon-sage">&#127968;</div>
-        <div><div class="section-title">Housing &amp; Daily Living</div><div class="section-subtitle"><e>Home care, utilities, transportation</e></div></div>
+        <div><div class="section-title">Housing &amp; Daily Living</div><div class="section-subtitle"><span class="ed">Home care, utilities, transportation</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
+      <div class="contacts-grid" id="contacts-housing">
+        <div class="contact-card" style="border-style:dashed;opacity:0.6;">
+          <div class="contact-name" style="color:var(--slate-light)">Add Contact</div>
+          <div class="contact-label">Use Edit Mode to add contacts</div>
+        </div>
+      </div>
       <div class="subsection" id="subsec-log-housing">
         <div class="subsection-header" onclick="toggleSub('log-housing')"><span class="subsection-title">&#128203; Log</span><span class="subsection-toggle">&#9660;</span></div>
         <div class="subsection-body"><div id="log-widget-housing"></div></div>
@@ -740,11 +781,17 @@
   <div class="section" id="sec-financial">
     <div class="section-header" onclick="toggle('sec-financial')">
       <div class="section-title-row"><div class="section-icon icon-amber">&#128176;</div>
-        <div><div class="section-title">Financial &amp; Other Benefits</div><div class="section-subtitle"><e>SSI, Social Security, other assistance</e></div></div>
+        <div><div class="section-title">Financial &amp; Other Benefits</div><div class="section-subtitle"><span class="ed">SSI, Social Security, other assistance</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
     </div>
     <div class="section-body">
+      <div class="contacts-grid" id="contacts-financial">
+        <div class="contact-card" style="border-style:dashed;opacity:0.6;">
+          <div class="contact-name" style="color:var(--slate-light)">Add Contact</div>
+          <div class="contact-label">Use Edit Mode to add contacts</div>
+        </div>
+      </div>
       <div class="subsection" id="subsec-log-financial">
         <div class="subsection-header" onclick="toggleSub('log-financial')"><span class="subsection-title">&#128203; Log</span><span class="subsection-toggle">&#9660;</span></div>
         <div class="subsection-body"><div id="log-widget-financial"></div></div>
@@ -777,7 +824,7 @@
   <div class="section" id="sec-emergency">
     <div class="section-header" onclick="toggle('sec-emergency')">
       <div class="section-title-row"><div class="section-icon icon-rose">&#128680;</div>
-        <div><div class="section-title">Emergency Info &amp; General Notes</div><div class="section-subtitle"><e>Key info in case of emergency</e></div></div>
+        <div><div class="section-title">Emergency Info &amp; General Notes</div><div class="section-subtitle"><span class="ed">Key info in case of emergency</span></div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;"><span class="section-badge badge-gray">Add Info</span><span class="toggle-icon">&#9660;</span></div>
     </div>
@@ -860,7 +907,7 @@ function showBanner(msg, isError) {
 let state = { notes:{}, actions:{}, logs:{}, appts:[], docs:{} };
 let saving = false, pendingSave = false;
 
-const noteSections = ['social','snap','medicaid','medical','therapy','authority','housing','financial','emergency'];
+const noteSections = ['social','snap','medicaid','medical','pcs','monarch','genesis','carolina','rha','therapy','authority','housing','financial','emergency'];
 const logKeys = ['social','snap','medicaid','medical','pcs','monarch','genesis','carolina','rha','authority','housing','financial','emergency'];
 const docSections = ['social','snap','medicaid','medical','therapy','authority','housing','financial','emergency'];
 const sectionLabels = {
@@ -978,7 +1025,7 @@ window.toggleEditMode = function() {
   const btn = document.getElementById('editModeBtn');
   btn.classList.toggle('active', editMode);
   btn.innerHTML = editMode ? '&#10003; Done Editing' : '&#9998; Edit Mode';
-  document.querySelectorAll('e').forEach(el => {
+  document.querySelectorAll('.ed').forEach(el => {
     el.contentEditable = editMode ? 'true' : 'false';
   });
   document.querySelectorAll('.appt-edit-cell').forEach(el => {
